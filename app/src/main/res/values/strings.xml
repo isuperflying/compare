@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">全球比价</string>
+
+    <string name="tab_home">首页</string>
+    <string name="tab_fight">产品列表</string>
+    <string name="tab_show">咨询中心</string>
+    <string name="tab_my">我的</string>
+
+    <string name="user_input_name">用户名/手机号</string>
+    <string name="user_input_password">请输入密码</string>
+    <string name="user_input_sms_code">请输入验证码</string>
+
+    <string name="sms_login_txt">短信验证码登录</string>
+
+    <string name="other_login_txt">第三方账号登录</string>
+
+    <string name="login_txt">登 录</string>
+    <string name="register_txt">注 册</string>
+    <string name="get_code_txt">获取验证码</string>
+
+    <string name="input_phone_number">请输入手机号</string>
+
+    <string name="input_new_password">请输入新密码</string>
+    <string name="input_again_new_password">请再次输入新密码</string>
+
+    <string name="register_user_txt">新用户注册</string>
+    <string name="forget_pw_txt">忘记密码</string>
+
+    <string name="good_detail_txt">商品详情</string>
+    <string name="product_rec_txt">产品推荐</string>
+    <string name="end_list_txt">到底啦</string>
+
+    <string name="permission_storage_never_ask_again">不再询问</string>
+    <string name="permission_storage_rationale">必须要开启存储权限，才能正常使用，请开启</string>
+    <string name="permission_storage_denied">禁止了存储权限，开启权限才能正常使用</string>
+
+    <string name="button_allow">开启</string>
+    <string name="button_deny">拒绝</string>
+
+    <string name="is_not_follow">关注</string>
+    <string name="is_follow">已关注</string>
+</resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff7990</color>
+    <color name="colorPrimaryDark">#ff7990</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="tab_text_selected">#fb5161</color>
+    <color name="tab_text_normal">#999999</color>
+
+    <color name="black">#000000</color>
+
+    <color name="main_bg_color">#f2f2f2</color>
+
+    <color name="border_line_color">#f6f6f6</color>
+
+    <color name="tab_indicator">#d6d6d6</color>
+    <color name="tab_tv_normal">#999999</color>
+    <color name="tab_tv_selected">#333333</color>
+    <color name="tab_bg">#fcfcfc</color>
+    <color name="tab_div">#d6d6d6</color>
+    <color name="loading_color">#ffda44</color>
+
+    <color name="line_color">#d1d1d1</color>
+    <color name="top_line_color">#ebebeb</color>
+
+    <color name="top_type_text_color">#2e2e2b</color>
+
+    <color name="hot_text_bg_color">#fee8e8</color>
+    <color name="hot_text_color">#fe4d4e</color>
+    <color name="tab_selected_color">#fe3858</color>
+    <color name="good_price_color">#ff3657</color>
+    <color name="country_good_num_color">#c3c3c3</color>
+
+    <color name="country_def_color">#c3c4c1</color>
+    <color name="country1_color">#feaa00</color>
+    <color name="country2_color">#bb988d</color>
+    <color name="country3_color">#ff7520</color>
+
+    <color name="forget_password_color">#636262</color>
+    <color name="sms_login_color">#656464</color>
+
+    <color name="other_login_color">#cdcdcd</color>
+
+    <color name="send_pre_color">#a8a7a0</color>
+
+    <color name="top_title_color">#3f3e37</color>
+
+    <color name="category_content_color">#686865</color>
+
+    <color name="good_search_bg_color">#7f8a8a8a</color>
+
+    <color name="follow_txt_color">#3f4038</color>
+
+    <color name="params_txt_color">#2f2f2c</color>
+
+    <color name="params_info_color">#a7a7a7</color>
+
+    <color name="share_text_color">#4d4d4d</color>
+
+    <color name="price_txt_color">#666460</color>
+
+    <color name="my_info_txt_color">#403f38</color>
+
+    <color name="my_info_nickname_color">#9c9698</color>
+
+    <color name="news_other_color">#a8a8a8</color>
+
+    <color name="edit_bg_color">#f9f8f8</color>
+
+    <color name="all_text_color">#646464</color>
+
+    <color name="group_line_color">#a9a9a9</color>
+
+    <color name="group_text_color">#676764</color>
+</resources>
