@@ -12,19 +12,19 @@
         android:gravity="left|center">
 
         <ImageView
-            android:id="@+id/iv_brand"
+            android:id="@+id/iv_user_head"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:scaleType="fitXY"
             android:src="@mipmap/def_comment_head" />
 
         <TextView
-            android:id="@+id/tv_brand_name"
+            android:id="@+id/tv_user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:layout_weight="1"
-            android:text="用户昵称"
+            android:text="火星用户"
             android:textColor="@color/top_type_text_color"
             android:textSize="12sp" />
     </LinearLayout>
@@ -36,6 +36,7 @@
         android:gravity="left|center">
 
         <TextView
+            android:id="@+id/tv_comment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2018-11-11"
@@ -43,6 +44,7 @@
             android:textSize="11sp" />
 
         <TextView
+            android:id="@+id/tv_good_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -58,6 +60,7 @@
         android:gravity="left|center">
 
         <TextView
+            android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论"
@@ -83,6 +86,7 @@
             android:gravity="left|center">
 
             <TextView
+                android:id="@+id/tv_see_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="浏览1232次"

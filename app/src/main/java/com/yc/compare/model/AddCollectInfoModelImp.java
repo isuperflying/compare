@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.yc.compare.api.CommentInfoServiceApi;
+import com.yc.compare.api.CollectInfoServiceApi;
 import com.yc.compare.base.BaseModel;
 import com.yc.compare.base.IBaseRequestCallBack;
-import com.yc.compare.bean.CommentInfoRet;
+import com.yc.compare.bean.AddCollectInfoRet;
+import com.yc.compare.bean.CollectInfoRet;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -20,34 +21,33 @@ import rx.subscriptions.CompositeSubscription;
  * Created by iflying on 2018/1/9.
  */
 
-public class CommentInfoModelImp extends BaseModel implements CommentInfoModel<CommentInfoRet> {
+public class AddCollectInfoModelImp extends BaseModel implements AddCollectInfoModel<AddCollectInfoRet> {
 
     private Context context = null;
-    private CommentInfoServiceApi commentInfoServiceApi;
+    private CollectInfoServiceApi collectInfoServiceApi;
     private CompositeSubscription mCompositeSubscription;
 
-    public CommentInfoModelImp(Context mContext) {
+    public AddCollectInfoModelImp(Context mContext) {
         super();
         context = mContext;
-        commentInfoServiceApi = mRetrofit.create(CommentInfoServiceApi.class);
+        collectInfoServiceApi = mRetrofit.create(CollectInfoServiceApi.class);
         mCompositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void getCommentInfoList(String gid, int page, final IBaseRequestCallBack<CommentInfoRet> iBaseRequestCallBack) {
-
+    public void doCollect(String uid, String gid, final IBaseRequestCallBack<AddCollectInfoRet> iBaseRequestCallBack) {
         JSONObject params = new JSONObject();
         try {
+            params.put("uid", uid);
             params.put("gid", gid);
-            params.put("page", page + "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        mCompositeSubscription.add(commentInfoServiceApi.getCommentInfoList(requestBody)  //将subscribe添加到subscription，用于注销subscribe
+        mCompositeSubscription.add(collectInfoServiceApi.doCollect(requestBody)  //将subscribe添加到subscription，用于注销subscribe
                 .observeOn(AndroidSchedulers.mainThread())//指定事件消费线程
                 .subscribeOn(Schedulers.io())  //指定 subscribe() 发生在 IO 线程
-                .subscribe(new Subscriber<CommentInfoRet>() {
+                .subscribe(new Subscriber<AddCollectInfoRet>() {
 
                     @Override
                     public void onStart() {
@@ -69,9 +69,9 @@ public class CommentInfoModelImp extends BaseModel implements CommentInfoModel<C
                     }
 
                     @Override
-                    public void onNext(CommentInfoRet commentInfoRet) {
+                    public void onNext(AddCollectInfoRet addCollectInfoRet) {
                         //回调接口：请求成功，获取实体类对象
-                        iBaseRequestCallBack.requestSuccess(commentInfoRet);
+                        iBaseRequestCallBack.requestSuccess(addCollectInfoRet);
                     }
                 }));
     }

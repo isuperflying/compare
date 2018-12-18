@@ -63,13 +63,13 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
         mCommentListView.setAdapter(commentAdapter);
 
         avi.show();
-        commentInfoPresenterImp.getCommentInfoList(currentPage);
+        commentInfoPresenterImp.getCommentInfoList("1", currentPage);
 
         commentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 currentPage++;
-                commentInfoPresenterImp.getCommentInfoList(currentPage);
+                commentInfoPresenterImp.getCommentInfoList("1", currentPage);
             }
         }, mCommentListView);
     }

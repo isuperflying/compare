@@ -1,10 +1,12 @@
 package com.yc.compare.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,19 +15,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
 import com.example.zhouwei.library.CustomPopWindow;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
+import com.yc.compare.bean.AddCollectInfoRet;
 import com.yc.compare.bean.GoodDetailInfo;
 import com.yc.compare.bean.GoodDetailInfoRet;
 import com.yc.compare.bean.ImageInfo;
+import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.common.Constants;
+import com.yc.compare.presenter.AddCollectInfoPresenterImp;
 import com.yc.compare.presenter.GoodDetailInfoPresenterImp;
+import com.yc.compare.ui.adapter.GoodInfoAdapter;
 import com.yc.compare.ui.adapter.ImageInfoAdapter;
 import com.yc.compare.ui.adapter.ParamsAdapter;
 import com.yc.compare.ui.base.BaseFragmentActivity;
@@ -102,11 +111,18 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     @BindView(R.id.tv_comment_content)
     TextView mCommentContentTextView;
 
+    @BindView(R.id.rec_list)
+    RecyclerView mRecListView;
+
     ImageInfoAdapter imageInfoAdapter;
+
+    GoodInfoAdapter recGoodInfoAdapter;
 
     private CustomPopWindow customPopWindow;
 
     private GoodDetailInfoPresenterImp goodDetailInfoPresenterImp;
+
+    private AddCollectInfoPresenterImp addCollectInfoPresenterImp;
 
     private int[] dataArr = new int[]{150, 120, 200, 88, 139, 66};
 
@@ -124,7 +140,13 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     public void initViews() {
         initGoodParams();
+
+        recGoodInfoAdapter = new GoodInfoAdapter(this, null);
+        mRecListView.setLayoutManager(new GridLayoutManager(this, 2));
+        mRecListView.setAdapter(recGoodInfoAdapter);
+
         goodDetailInfoPresenterImp = new GoodDetailInfoPresenterImp(this, this);
+        addCollectInfoPresenterImp = new AddCollectInfoPresenterImp(this, this);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -145,7 +167,6 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         });
 
         Logger.i("width--->" + ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() / 6);
-
         goodDetailInfoPresenterImp.getGoodDetailInfoByParams("1", "1");
     }
 
@@ -207,7 +228,19 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         bottomSheetDialog.show();
     }
 
-    public void initLineView(List<GoodDetailInfo.PriceItem> priceItems) {
+    @OnClick(R.id.layout_follow)
+    void follow() {
+        addCollectInfoPresenterImp.doCollect("1", "1");
+    }
+
+    @OnClick(R.id.tv_all_comment)
+    void allComment() {
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra("gid", "gid");
+        startActivity(intent);
+    }
+
+    public void initLineView(List<GoodDetailInfo.PriceItem> priceItems, int ySpace) {
         List<LineChartView.Data> datas = new ArrayList<>();
         List<String> xDatas = new ArrayList<>();
         for (GoodDetailInfo.PriceItem item : priceItems) {
@@ -223,7 +256,7 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         lineChart.setData(datas);
         lineChart.setXLineData(xDatas);
 
-        lineChart.setRulerYSpace(100);
+        lineChart.setRulerYSpace(ySpace);
         lineChart.setStepSpace((int) ((ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() - 36) / 6));
         lineChart.setShowTable(true);
     }
@@ -239,40 +272,67 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     }
 
     @Override
-    public void loadDataSuccess(GoodDetailInfoRet tData) {
+    public void loadDataSuccess(ResultInfo tData) {
         Logger.i(JSONObject.toJSONString(tData));
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
 
-            mIsFollowGood.setImageResource(tData.getData().getIsCollect() == 0 ? R.mipmap.follow_good_normal : R.mipmap.follow_good_selected);
-            mIsFollowTextView.setText(tData.getData().getIsCollect() == 0 ? R.string.is_not_follow : R.string.is_follow);
+            if (tData instanceof GoodDetailInfoRet) {
+                mIsFollowGood.setImageResource(((GoodDetailInfoRet) tData).getData().getIsCollect() == 0 ? R.mipmap.follow_good_normal : R.mipmap.follow_good_selected);
+                mIsFollowTextView.setText(((GoodDetailInfoRet) tData).getData().getIsCollect() == 0 ? R.string.is_not_follow : R.string.is_follow);
 
-            if (tData.getData().getInfo() != null) {
+                if (((GoodDetailInfoRet) tData).getData().getInfo() != null) {
 
-                mGoodNameTextView.setText(tData.getData().getInfo().getGoodName());
-                mGoodPriceTextView.setText(tData.getData().getInfo().getGoodPrice() + "");
+                    mGoodNameTextView.setText(((GoodDetailInfoRet) tData).getData().getInfo().getGoodName());
+                    mGoodPriceTextView.setText(((GoodDetailInfoRet) tData).getData().getInfo().getGoodPrice() + "");
 
-                if (tData.getData().getInfo().getGoodsImages() != null && tData.getData().getInfo().getGoodsImages().length > 0) {
-                    initBanner(tData.getData().getInfo().getGoodsImages());
-                }
-
-                if (!StringUtils.isEmpty(tData.getData().getInfo().getGoodsContent())) {
-                    String[] tempImgs = tData.getData().getInfo().getGoodsContent().split(";");
-                    List<ImageInfo> list = new ArrayList<>();
-                    for (int i = 0; i < tempImgs.length; i++) {
-                        list.add(new ImageInfo(i + "", tempImgs[i]));
+                    if (((GoodDetailInfoRet) tData).getData().getInfo().getGoodsImages() != null && ((GoodDetailInfoRet) tData).getData().getInfo().getGoodsImages().length > 0) {
+                        initBanner(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsImages());
                     }
-                    imageInfoAdapter.setNewData(list);
+
+                    if (!StringUtils.isEmpty(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent())) {
+                        String[] tempImgs = ((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent().split(";");
+                        List<ImageInfo> list = new ArrayList<>();
+                        for (int i = 0; i < tempImgs.length; i++) {
+                            list.add(new ImageInfo(i + "", tempImgs[i]));
+                        }
+                        imageInfoAdapter.setNewData(list);
+                    }
+
+                    if (((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue() != null && ((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue().size() > 0) {
+                        paramsAdapter.setNewData(((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue());
+                    }
                 }
 
-                if (tData.getData().getInfo().getAttrValue() != null && tData.getData().getInfo().getAttrValue().size() > 0) {
-                    paramsAdapter.setNewData(tData.getData().getInfo().getAttrValue());
+                if (((GoodDetailInfoRet) tData).getData().getPrices() != null && ((GoodDetailInfoRet) tData).getData().getPrices().getList() != null && ((GoodDetailInfoRet) tData).getData().getPrices().getList().size() > 0) {
+                    double max = ((GoodDetailInfoRet) tData).getData().getPrices().getMax();
+                    double min = ((GoodDetailInfoRet) tData).getData().getPrices().getMin();
+                    int ySpace = (int) ((max - min) / 6);
+                    initLineView(((GoodDetailInfoRet) tData).getData().getPrices().getList(), ySpace == 0 ? 50 : ySpace);
+                }
+
+                if (((GoodDetailInfoRet) tData).getData().getComments() != null) {
+                    mCountTextView.setText("全部评价(" + ((GoodDetailInfoRet) tData).getData().getComments().getListCount() + ")");
+                    if (((GoodDetailInfoRet) tData).getData().getComments().getList() != null && ((GoodDetailInfoRet) tData).getData().getComments().getList().size() > 0) {
+                        GoodDetailInfo.GdCommentItem commentItem = ((GoodDetailInfoRet) tData).getData().getComments().getList().get(0);
+                        Glide.with(this).load(commentItem.getHeadPic()).into(mCommentHeadImageView);
+                        mCommentUserNameTextView.setText(commentItem.getNickName());
+                        mCommentContentTextView.setText(commentItem.getContent());
+                    }
+                }
+                if (((GoodDetailInfoRet) tData).getData().getSimilar() != null && ((GoodDetailInfoRet) tData).getData().getSimilar().size() > 0) {
+                    recGoodInfoAdapter.setNewData(((GoodDetailInfoRet) tData).getData().getSimilar());
                 }
             }
 
-            if (tData.getData().getPrices() != null && tData.getData().getPrices().getList() != null && tData.getData().getPrices().getList().size() > 0) {
-                initLineView(tData.getData().getPrices().getList());
+            if (tData instanceof AddCollectInfoRet) {
+                Logger.i("AddCollectInfoRet--->");
+                Logger.i(JSONObject.toJSONString(tData));
+                if (((AddCollectInfoRet) tData).getData().getIsCollect() == 0) {
+                    ToastUtils.showLong("已取消");
+                } else {
+                    ToastUtils.showLong("已关注");
+                }
             }
-
         }
     }
 

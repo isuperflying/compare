@@ -140,23 +140,23 @@ public class GoodDetailInfo {
     }
 
     public class PriceInfo {
-        private String min;
-        private String max;
+        private double min;
+        private double max;
         private List<PriceItem> list;
 
-        public String getMin() {
+        public double getMin() {
             return min;
         }
 
-        public void setMin(String min) {
+        public void setMin(double min) {
             this.min = min;
         }
 
-        public String getMax() {
+        public double getMax() {
             return max;
         }
 
-        public void setMax(String max) {
+        public void setMax(double max) {
             this.max = max;
         }
 

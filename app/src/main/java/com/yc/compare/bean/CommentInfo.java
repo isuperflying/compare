@@ -1,17 +1,31 @@
 package com.yc.compare.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by myflying on 2018/12/7.
  */
 public class CommentInfo {
 
     private String id;
+    @SerializedName("content")
     private String commentContent;
+    @SerializedName("nickname")
     private String userNickName;
+    @SerializedName("head_pic")
     private String userHeadImage;
+    @SerializedName("add_time")
     private String commentDate;
     private String goodType;
-    private String goodImages;
+
+    @SerializedName("imgs")
+    private String[] goodImages;
+
+    @SerializedName("sub_name")
+    private String subTitle;
+
+    @SerializedName("view_count")
+    private String viewCount;
 
     public String getId() {
         return id;
@@ -61,11 +75,27 @@ public class CommentInfo {
         this.goodType = goodType;
     }
 
-    public String getGoodImages() {
+    public String[] getGoodImages() {
         return goodImages;
     }
 
-    public void setGoodImages(String goodImages) {
+    public void setGoodImages(String[] goodImages) {
         this.goodImages = goodImages;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public String getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(String viewCount) {
+        this.viewCount = viewCount;
     }
 }

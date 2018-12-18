@@ -25,7 +25,7 @@ public class CommentInfoPresenterImp extends BasePresenterImp<CommentInfoView, C
     }
 
     @Override
-    public void getCommentInfoList(int type) {
-        commentInfoModelImp.getCommentInfoList(type, this);
+    public void getCommentInfoList(String gid, int type) {
+        commentInfoModelImp.getCommentInfoList(gid, type, this);
     }
 }

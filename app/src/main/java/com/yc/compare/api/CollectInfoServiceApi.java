@@ -1,5 +1,6 @@
 package com.yc.compare.api;
 
+import com.yc.compare.bean.AddCollectInfoRet;
 import com.yc.compare.bean.CollectInfoRet;
 
 import okhttp3.RequestBody;
@@ -14,4 +15,7 @@ public interface CollectInfoServiceApi {
 
     @POST("v1.user/collectList")
     Observable<CollectInfoRet> getCollectInfoList(@Body RequestBody requestBody);
+
+    @POST("v1.goods/doCollect")
+    Observable<AddCollectInfoRet> doCollect(@Body RequestBody requestBody);
 }

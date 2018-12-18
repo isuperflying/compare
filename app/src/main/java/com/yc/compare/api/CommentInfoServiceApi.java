@@ -12,6 +12,6 @@ import rx.Observable;
  */
 public interface CommentInfoServiceApi {
 
-    @POST("v1.common/commentList")
+    @POST("v1.goods/commentList")
     Observable<CommentInfoRet> getCommentInfoList(@Body RequestBody requestBody);
 }

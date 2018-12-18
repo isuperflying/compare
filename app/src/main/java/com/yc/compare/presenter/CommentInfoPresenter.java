@@ -5,5 +5,5 @@ package com.yc.compare.presenter;
  */
 
 public interface CommentInfoPresenter {
-    void getCommentInfoList(int page);
+    void getCommentInfoList(String gid,int page);
 }
