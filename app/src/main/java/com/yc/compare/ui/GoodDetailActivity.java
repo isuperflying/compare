@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -113,6 +112,12 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     @BindView(R.id.rec_list)
     RecyclerView mRecListView;
+
+    @BindView(R.id.tv_other_country)
+    TextView mOtherCountryTextView;
+
+    @BindView(R.id.tv_min_price)
+    TextView mMinPriceTextView;
 
     ImageInfoAdapter imageInfoAdapter;
 
@@ -240,6 +245,12 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         startActivity(intent);
     }
 
+    @OnClick(R.id.tv_other_country)
+    void otherCountry() {
+        Intent intent = new Intent(this, OtherPriceActivity.class);
+        startActivity(intent);
+    }
+
     public void initLineView(List<GoodDetailInfo.PriceItem> priceItems, int ySpace) {
         List<LineChartView.Data> datas = new ArrayList<>();
         List<String> xDatas = new ArrayList<>();
@@ -304,6 +315,7 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
                 }
 
                 if (((GoodDetailInfoRet) tData).getData().getPrices() != null && ((GoodDetailInfoRet) tData).getData().getPrices().getList() != null && ((GoodDetailInfoRet) tData).getData().getPrices().getList().size() > 0) {
+                    mMinPriceTextView.setText(((GoodDetailInfoRet) tData).getData().getPrices().getMin() + "");
                     double max = ((GoodDetailInfoRet) tData).getData().getPrices().getMax();
                     double min = ((GoodDetailInfoRet) tData).getData().getPrices().getMin();
                     int ySpace = (int) ((max - min) / 6);

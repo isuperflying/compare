@@ -59,11 +59,13 @@
                 android:src="@mipmap/search_icon" />
 
             <EditText
+                android:id="@+id/et_key_word"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
-                android:focusable="false"
                 android:background="@null"
+                android:focusable="false"
+                android:imeOptions="actionSearch"
                 android:hint="搜索国家名称"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -74,6 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
@@ -85,13 +88,15 @@
             android:textColor="@color/params_info_color" />
 
         <LinearLayout
+            android:id="@+id/layout_search_result"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginLeft="12dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/iv_country_img"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
                 android:src="@mipmap/rec2" />
@@ -104,6 +109,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_country_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -113,6 +119,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/tv_country_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -126,7 +133,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/other_price_list"

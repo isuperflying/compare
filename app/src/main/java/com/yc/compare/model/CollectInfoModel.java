@@ -7,5 +7,7 @@ import com.yc.compare.base.IBaseRequestCallBack;
  */
 
 public interface CollectInfoModel<T> {
-    void getCollectInfoList(String uid,int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
+    void getCollectInfoList(String uid,String cid,int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
+
+    void deleteCollect(String cids, IBaseRequestCallBack<T> iBaseRequestCallBack);
 }

@@ -201,6 +201,7 @@
                         android:padding="6dp">
 
                         <ImageView
+                            android:id="@+id/iv_rec1"
                             android:layout_width="126dp"
                             android:layout_height="192dp"
                             android:focusable="false"
@@ -214,12 +215,14 @@
                             android:orientation="vertical">
 
                             <ImageView
+                                android:id="@+id/iv_rec2"
                                 android:layout_width="190dp"
                                 android:layout_height="93dp"
                                 android:focusable="false"
                                 android:src="@mipmap/rec2" />
 
                             <ImageView
+                                android:id="@+id/iv_rec3"
                                 android:layout_width="190dp"
                                 android:layout_height="93dp"
                                 android:focusable="false"

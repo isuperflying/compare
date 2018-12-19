@@ -7,5 +7,5 @@ import com.yc.compare.base.IBaseRequestCallBack;
  */
 
 public interface OtherPriceInfoModel<T> {
-    void getOtherPriceInfoList(int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
+    void getOtherPriceInfoList(String gid, String keyword, IBaseRequestCallBack<T> iBaseRequestCallBack);
 }

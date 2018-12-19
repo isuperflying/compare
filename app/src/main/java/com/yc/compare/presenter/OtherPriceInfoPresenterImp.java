@@ -25,7 +25,7 @@ public class OtherPriceInfoPresenterImp extends BasePresenterImp<OtherPriceInfoV
     }
 
     @Override
-    public void getOtherPriceInfoList(int type) {
-        otherPriceInfoModelImp.getOtherPriceInfoList(type, this);
+    public void getOtherPriceInfoList(String gid, String keyword) {
+        otherPriceInfoModelImp.getOtherPriceInfoList(gid, keyword, this);
     }
 }

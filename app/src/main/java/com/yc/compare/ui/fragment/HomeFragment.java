@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.BannerInfo;
@@ -83,6 +85,15 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
 
     @BindView(R.id.tv_hot_news)
     TextView mNewsTextView;
+
+    @BindView(R.id.iv_rec1)
+    ImageView mRec1ImageView;
+
+    @BindView(R.id.iv_rec2)
+    ImageView mRec2ImageView;
+
+    @BindView(R.id.iv_rec3)
+    ImageView mRec3ImageView;
 
     List<String> mTitleDataList;
 
@@ -214,6 +225,18 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
                 if (tData.getData().getNews() != null && tData.getData().getNews().size() > 0) {
                     mNewsTextView.setText(tData.getData().getNews().get(0).getTitle());
                     newsId = tData.getData().getNews().get(0).getId();
+                }
+
+                if (tData.getData().getSpecial() != null) {
+                    if (tData.getData().getSpecial().size() >= 1) {
+                        Glide.with(this).load(tData.getData().getSpecial().get(0).getImg()).into(mRec1ImageView);
+                    }
+                    if (tData.getData().getSpecial().size() >= 2) {
+                        Glide.with(this).load(tData.getData().getSpecial().get(1).getImg()).into(mRec2ImageView);
+                    }
+                    if (tData.getData().getSpecial().size() >= 3) {
+                        Glide.with(this).load(tData.getData().getSpecial().get(2).getImg()).into(mRec3ImageView);
+                    }
                 }
             }
         }

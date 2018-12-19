@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.yc.compare.api.OtherPriceInfoServiceApi;
+import com.yc.compare.api.CollectInfoServiceApi;
 import com.yc.compare.base.BaseModel;
 import com.yc.compare.base.IBaseRequestCallBack;
-import com.yc.compare.bean.OtherPriceInfoRet;
+import com.yc.compare.bean.CollectTypeRet;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -20,33 +20,33 @@ import rx.subscriptions.CompositeSubscription;
  * Created by iflying on 2018/1/9.
  */
 
-public class OtherPriceInfoModelImp extends BaseModel implements OtherPriceInfoModel<OtherPriceInfoRet> {
+public class CollectTypeModelImp extends BaseModel implements CollectTypeModel<CollectTypeRet> {
 
     private Context context = null;
-    private OtherPriceInfoServiceApi otherPriceInfoServiceApi;
+    private CollectInfoServiceApi collectInfoServiceApi;
     private CompositeSubscription mCompositeSubscription;
 
-    public OtherPriceInfoModelImp(Context mContext) {
+    public CollectTypeModelImp(Context mContext) {
         super();
         context = mContext;
-        otherPriceInfoServiceApi = mRetrofit.create(OtherPriceInfoServiceApi.class);
+        collectInfoServiceApi = mRetrofit.create(CollectInfoServiceApi.class);
         mCompositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void getOtherPriceInfoList(String gid, String keyword, final IBaseRequestCallBack<OtherPriceInfoRet> iBaseRequestCallBack) {
+    public void collectType(String uid, final IBaseRequestCallBack<CollectTypeRet> iBaseRequestCallBack) {
         JSONObject params = new JSONObject();
         try {
-            params.put("gid", gid);
-            params.put("key_word", keyword);
+            params.put("uid", uid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        mCompositeSubscription.add(otherPriceInfoServiceApi.getOtherPriceInfoList(requestBody)  //将subscribe添加到subscription，用于注销subscribe
+
+        mCompositeSubscription.add(collectInfoServiceApi.collectType(requestBody)  //将subscribe添加到subscription，用于注销subscribe
                 .observeOn(AndroidSchedulers.mainThread())//指定事件消费线程
                 .subscribeOn(Schedulers.io())  //指定 subscribe() 发生在 IO 线程
-                .subscribe(new Subscriber<OtherPriceInfoRet>() {
+                .subscribe(new Subscriber<CollectTypeRet>() {
 
                     @Override
                     public void onStart() {
@@ -68,9 +68,9 @@ public class OtherPriceInfoModelImp extends BaseModel implements OtherPriceInfoM
                     }
 
                     @Override
-                    public void onNext(OtherPriceInfoRet otherPriceInfoRet) {
+                    public void onNext(CollectTypeRet collectTypeRet) {
                         //回调接口：请求成功，获取实体类对象
-                        iBaseRequestCallBack.requestSuccess(otherPriceInfoRet);
+                        iBaseRequestCallBack.requestSuccess(collectTypeRet);
                     }
                 }));
     }

@@ -38,7 +38,7 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
 
     private ProgressDialog progressDialog = null;
 
-    private int pageSize = 12;
+    private int pageSize = 20;
 
     private int currentPage = 1;
 
@@ -63,13 +63,13 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
         mCommentListView.setAdapter(commentAdapter);
 
         avi.show();
-        commentInfoPresenterImp.getCommentInfoList("1", currentPage);
+        commentInfoPresenterImp.getCommentInfoList("566", currentPage);
 
         commentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 currentPage++;
-                commentInfoPresenterImp.getCommentInfoList("1", currentPage);
+                commentInfoPresenterImp.getCommentInfoList("566", currentPage);
             }
         }, mCommentListView);
     }
@@ -89,8 +89,17 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
         avi.hide();
         Logger.i(JSONObject.toJSONString(tData));
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
-            commentAdapter.setNewData(tData.getData());
-            commentAdapter.loadMoreEnd();
+            if (currentPage == 1) {
+                commentAdapter.setNewData(tData.getData().getList());
+            } else {
+                commentAdapter.addData(tData.getData().getList());
+                if (tData.getData().getList().size() == pageSize) {
+                    commentAdapter.loadMoreComplete();
+                } else {
+                    commentAdapter.loadMoreEnd();
+                }
+            }
+
         } else {
             ToastUtils.showLong("数据异常,请重试");
         }

@@ -76,4 +76,8 @@
     <color name="group_line_color">#a9a9a9</color>
 
     <color name="group_text_color">#676764</color>
+
+    <color name="min_price_color">#6f6f6f</color>
+
+    <color name="collect_type_select_color">#ffe3e5</color>
 </resources>

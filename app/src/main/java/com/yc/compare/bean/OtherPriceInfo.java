@@ -1,13 +1,26 @@
 package com.yc.compare.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by myflying on 2018/12/7.
  */
 public class OtherPriceInfo {
     private String id;
+
+    @SerializedName("name")
     private String countryName;
+
+    @SerializedName("logo")
+    private String countryLogo;
+
+    @SerializedName("local_price")
     private String localPrice;
+
+    @SerializedName("market_price")
     private String chinaPrice;
+
+    @SerializedName("exchange")
     private String rate;
 
     public String getId() {
@@ -48,5 +61,13 @@ public class OtherPriceInfo {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    public String getCountryLogo() {
+        return countryLogo;
+    }
+
+    public void setCountryLogo(String countryLogo) {
+        this.countryLogo = countryLogo;
     }
 }

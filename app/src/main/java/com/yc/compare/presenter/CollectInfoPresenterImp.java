@@ -25,7 +25,12 @@ public class CollectInfoPresenterImp extends BasePresenterImp<CollectInfoView, C
     }
 
     @Override
-    public void getCollectInfoList(String uid,int type) {
-        collectInfoModelImp.getCollectInfoList(uid,type, this);
+    public void getCollectInfoList(String uid, String cid, int page) {
+        collectInfoModelImp.getCollectInfoList(uid, cid, page, this);
+    }
+
+    @Override
+    public void deleteCollect(String cids) {
+        collectInfoModelImp.deleteCollect(cids, this);
     }
 }

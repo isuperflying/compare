@@ -9,9 +9,13 @@ import java.util.List;
  */
 public class HomeDataWrapper {
     private List<BannerInfo> banner;
+
     private List<NewsInfo> news;
+
     @SerializedName("p_category")
     private List<CategoryInfo> categoryInfoList;
+
+    private List<Special> special;
 
     public List<BannerInfo> getBanner() {
         return banner;
@@ -35,5 +39,13 @@ public class HomeDataWrapper {
 
     public void setCategoryInfoList(List<CategoryInfo> categoryInfoList) {
         this.categoryInfoList = categoryInfoList;
+    }
+
+    public List<Special> getSpecial() {
+        return special;
+    }
+
+    public void setSpecial(List<Special> special) {
+        this.special = special;
     }
 }

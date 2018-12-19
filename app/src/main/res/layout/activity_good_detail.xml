@@ -146,8 +146,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="@string/is_not_follow"
                         android:clickable="false"
+                        android:text="@string/is_not_follow"
                         android:textColor="@color/follow_txt_color"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -221,6 +221,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/tv_other_country"
                     android:layout_width="69dp"
                     android:layout_height="24dp"
                     android:layout_alignParentRight="true"
@@ -250,14 +251,41 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="200dp"
                 android:layout_marginBottom="6dp"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/tv_min_price"
+                        android:text="价格最低："
+                        android:textColor="@color/min_price_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_min_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="12dp"
+                        android:text="¥88"
+                        android:textColor="@color/tab_selected_color"
+                        android:textSize="14sp" />
+                </RelativeLayout>
 
                 <com.yc.compare.ui.custom.LineChartView
                     android:id="@+id/line_chart_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <RelativeLayout

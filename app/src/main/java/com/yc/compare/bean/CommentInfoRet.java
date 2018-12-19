@@ -1,18 +1,16 @@
 package com.yc.compare.bean;
 
-import java.util.List;
-
 /**
  * Created by myflying on 2018/12/3.
  */
 public class CommentInfoRet extends ResultInfo {
-    private List<CommentInfo> data;
+    private CommentWrapper data;
 
-    public List<CommentInfo> getData() {
+    public CommentWrapper getData() {
         return data;
     }
 
-    public void setData(List<CommentInfo> data) {
+    public void setData(CommentWrapper data) {
         this.data = data;
     }
 }

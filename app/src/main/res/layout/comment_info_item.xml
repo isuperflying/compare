@@ -9,12 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="6dp"
         android:gravity="left|center">
 
         <ImageView
             android:id="@+id/iv_user_head"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:scaleType="fitXY"
             android:src="@mipmap/def_comment_head" />
 
@@ -26,13 +27,14 @@
             android:layout_weight="1"
             android:text="火星用户"
             android:textColor="@color/top_type_text_color"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:gravity="left|center">
 
         <TextView
@@ -41,42 +43,49 @@
             android:layout_height="wrap_content"
             android:text="2018-11-11"
             android:textColor="@color/other_login_color"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_good_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="颜色分类：浅蓝色4件套"
             android:textColor="@color/other_login_color"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="12dp"
         android:gravity="left|center">
 
         <TextView
             android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论商品的评论"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="暂无评论"
             android:textColor="@color/top_type_text_color"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
+        android:gravity="left|center"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/comment_img_list"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
         <LinearLayout

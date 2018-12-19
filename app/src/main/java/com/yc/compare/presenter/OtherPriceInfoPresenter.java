@@ -5,5 +5,5 @@ package com.yc.compare.presenter;
  */
 
 public interface OtherPriceInfoPresenter {
-    void getOtherPriceInfoList(int type);
+    void getOtherPriceInfoList(String gid, String keyword);
 }

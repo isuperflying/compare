@@ -24,7 +24,9 @@ public class OtherPriceAdapter extends BaseQuickAdapter<OtherPriceInfo, BaseView
 
     @Override
     protected void convert(final BaseViewHolder helper, final OtherPriceInfo item) {
-        //helper.setText(R.id.tv_brand_name, item.getBrandName());
-        //Glide.with(mContext).asBitmap().load(item.getBrandImage()).into((ImageView) helper.itemView.findViewById(R.id.iv_brand));
+        helper.setText(R.id.tv_country_name, item.getCountryName())
+                .setText(R.id.tv_local_price, item.getLocalPrice() + "")
+                .setText(R.id.tv_rmb_price, item.getChinaPrice() + "")
+                .setText(R.id.tv_rate, item.getRate() + "");
     }
 }

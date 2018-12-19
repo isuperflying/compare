@@ -12,6 +12,6 @@ import rx.Observable;
  */
 public interface OtherPriceInfoServiceApi {
 
-    @POST("v1.common/hotBrandList")
+    @POST("v1.goods/allPrice")
     Observable<OtherPriceInfoRet> getOtherPriceInfoList(@Body RequestBody requestBody);
 }

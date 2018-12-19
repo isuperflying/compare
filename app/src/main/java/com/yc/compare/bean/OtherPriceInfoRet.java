@@ -1,18 +1,16 @@
 package com.yc.compare.bean;
 
-import java.util.List;
-
 /**
  * Created by myflying on 2018/12/3.
  */
 public class OtherPriceInfoRet extends ResultInfo {
-    private List<OtherPriceInfo> data;
+    private OtherPriceWrapper data;
 
-    public List<OtherPriceInfo> getData() {
+    public OtherPriceWrapper getData() {
         return data;
     }
 
-    public void setData(List<OtherPriceInfo> data) {
+    public void setData(OtherPriceWrapper data) {
         this.data = data;
     }
 }
