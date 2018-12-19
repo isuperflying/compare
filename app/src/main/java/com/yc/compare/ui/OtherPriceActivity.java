@@ -16,10 +16,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.yc.compare.R;
+import com.yc.compare.bean.OtherPriceInfo;
 import com.yc.compare.bean.OtherPriceInfoRet;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.OtherPriceInfoPresenterImp;
@@ -85,12 +87,6 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
         avi.show();
         otherPriceInfoPresenterImp.getOtherPriceInfoList("566", "");
 
-        otherPriceAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-            @Override
-            public void onLoadMoreRequested() {
-                otherPriceInfoPresenterImp.getOtherPriceInfoList("566", "");
-            }
-        }, mCommentListView);
         mKeyWordEditText.setOnEditorActionListener(new EditorActionListener());
     }
 
@@ -110,18 +106,18 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
         Logger.i(JSONObject.toJSONString(tData));
 
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
-//            if (tData.getList() != null) {
-//                otherPriceAdapter.setNewData(tData.getList());
-//            }
-//            if (tData.getSearchList() != null && tData.getSearchList().size() > 0) {
-//                mSearchResultLayout.setVisibility(View.VISIBLE);
-//                OtherPriceInfo otherPriceInfo = tData.getSearchList().get(0);
-//                mCountryNameTextView.setText(otherPriceInfo.getCountryName());
-//                mCountryPriceTextView.setText("¥" + otherPriceInfo.getLocalPrice());
-//                Glide.with(this).load(otherPriceInfo.getCountryLogo()).into(mCountryImageView);
-//            } else {
-//                mSearchResultLayout.setVisibility(View.GONE);
-//            }
+            if (tData.getData().getList() != null) {
+                otherPriceAdapter.setNewData(tData.getData().getList());
+            }
+            if (tData.getData().getSearchList() != null && tData.getData().getSearchList().size() > 0) {
+                mSearchResultLayout.setVisibility(View.VISIBLE);
+                OtherPriceInfo otherPriceInfo = tData.getData().getSearchList().get(0);
+                mCountryNameTextView.setText(otherPriceInfo.getCountryName());
+                mCountryPriceTextView.setText("¥" + otherPriceInfo.getLocalPrice());
+                Glide.with(this).load(otherPriceInfo.getCountryLogo()).into(mCountryImageView);
+            } else {
+                mSearchResultLayout.setVisibility(View.GONE);
+            }
         } else {
             ToastUtils.showLong("数据异常,请重试");
         }

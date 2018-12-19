@@ -49,6 +49,8 @@
             android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:background="@drawable/input_bg"
             android:gravity="left|center">
 
@@ -64,9 +66,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:background="@null"
-                android:focusable="false"
                 android:imeOptions="actionSearch"
                 android:hint="搜索国家名称"
+                android:inputType="text"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.yc.compare.ui;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -22,11 +23,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.ResultInfo;
+import com.yc.compare.bean.UpdateInfoRet;
+import com.yc.compare.common.Constants;
+import com.yc.compare.presenter.UpdateInfoPresenterImp;
 import com.yc.compare.ui.base.BaseFragmentActivity;
 import com.yc.compare.ui.custom.ConfirmDialog;
 import com.yc.compare.ui.custom.Glide4Engine;
 import com.yc.compare.ui.custom.GlideRoundTransform;
 import com.yc.compare.view.SuggestInfoView;
+import com.yc.compare.view.UpdateInfoView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 
@@ -38,7 +43,7 @@ import butterknife.OnClick;
 /**
  * Created by myflying on 2018/12/3.
  */
-public class UserInfoActivity extends BaseFragmentActivity implements SuggestInfoView, View.OnClickListener {
+public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfoView, View.OnClickListener {
 
     private static final int TAKE_BIG_PICTURE = 1000;
 
@@ -56,6 +61,10 @@ public class UserInfoActivity extends BaseFragmentActivity implements SuggestInf
     private Uri imageUri;
 
     private int mCurrentDialogStyle = com.qmuiteam.qmui.R.style.QMUI_Dialog;
+
+    private UpdateInfoPresenterImp updateInfoPresenterImp;
+
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected int getContextViewId() {
@@ -80,6 +89,10 @@ public class UserInfoActivity extends BaseFragmentActivity implements SuggestInf
         photoItem.setOnClickListener(this);
         cancelItem.setOnClickListener(this);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("正在修改");
+
+        updateInfoPresenterImp = new UpdateInfoPresenterImp(this, this);
     }
 
 
@@ -97,6 +110,10 @@ public class UserInfoActivity extends BaseFragmentActivity implements SuggestInf
             public void doConfirm(String nickName) {
                 Logger.i("nick name" + nickName);
                 confirmDialog.dismiss();
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
+                updateInfoPresenterImp.updateNickName("1", nickName);
             }
 
             @Override
@@ -129,8 +146,16 @@ public class UserInfoActivity extends BaseFragmentActivity implements SuggestInf
     }
 
     @Override
-    public void loadDataSuccess(ResultInfo tData) {
+    public void loadDataSuccess(UpdateInfoRet tData) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
 
+        if (tData != null && tData.getCode() == Constants.SUCCESS) {
+            ToastUtils.showLong("修改成功");
+        } else {
+            ToastUtils.showLong("修改失败");
+        }
     }
 
     @Override
