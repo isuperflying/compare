@@ -88,4 +88,5 @@ dependencies {
 
     implementation 'com.zhihu.android:matisse:0.5.2-beta4'
     implementation 'com.github.yuruiyin:AppbarLayoutBehavior:v1.0.1'
+    implementation 'com.liulishuo.filedownloader:library:1.7.5'
 }

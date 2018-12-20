@@ -290,6 +290,13 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
         }
     }
 
+    @OnClick(R.id.tv_forget_pw)
+    void forgetPassWord() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("page_type", 2);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.tv_register)
     void register() {
         Intent intent = new Intent(this, RegisterActivity.class);
@@ -418,6 +425,17 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @OnClick(R.id.iv_back)
+    void back() {
+        popBackStack();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        popBackStack();
     }
 
     @Override

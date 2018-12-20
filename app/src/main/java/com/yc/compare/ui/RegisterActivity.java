@@ -100,8 +100,10 @@ public class RegisterActivity extends BaseFragmentActivity implements UserView {
         }
         if (pageType == 1) {
             mTitleTextView.setText(R.string.register_user_txt);
+            mRegisterButton.setText(R.string.register_txt);
         } else {
             mTitleTextView.setText(R.string.forget_pw_txt);
+            mRegisterButton.setText(R.string.config_info_txt);
         }
         initViews();
     }
@@ -261,7 +263,12 @@ public class RegisterActivity extends BaseFragmentActivity implements UserView {
 
     //注册用户
     public void register() {
-        userPresenterImp.register(mMobileEditText.getText().toString(), mPassWordEditText.getText().toString());
+        if(pageType == 1){
+            userPresenterImp.register(mMobileEditText.getText().toString(), mPassWordEditText.getText().toString());
+        }else{
+            userPresenterImp.forget(mMobileEditText.getText().toString(), mPassWordEditText.getText().toString());
+        }
+
     }
 
     @Override

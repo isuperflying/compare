@@ -13,16 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.PathUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
-import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.bean.UpdateInfoRet;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.UpdateInfoPresenterImp;
@@ -30,7 +31,6 @@ import com.yc.compare.ui.base.BaseFragmentActivity;
 import com.yc.compare.ui.custom.ConfirmDialog;
 import com.yc.compare.ui.custom.Glide4Engine;
 import com.yc.compare.ui.custom.GlideRoundTransform;
-import com.yc.compare.view.SuggestInfoView;
 import com.yc.compare.view.UpdateInfoView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -54,6 +54,9 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
     @BindView(R.id.iv_user_head)
     ImageView mUserHeadImageView;
 
+    @BindView(R.id.tv_nick_name)
+    TextView mNickNameTextView;
+
     BottomSheetDialog bottomSheetDialog;
 
     private File outputImage;
@@ -65,6 +68,8 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
     private UpdateInfoPresenterImp updateInfoPresenterImp;
 
     private ProgressDialog progressDialog = null;
+
+    private String resultNickName;
 
     @Override
     protected int getContextViewId() {
@@ -109,6 +114,7 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
             @Override
             public void doConfirm(String nickName) {
                 Logger.i("nick name" + nickName);
+                resultNickName = nickName;
                 confirmDialog.dismiss();
                 if (progressDialog != null && !progressDialog.isShowing()) {
                     progressDialog.show();
@@ -147,12 +153,17 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
 
     @Override
     public void loadDataSuccess(UpdateInfoRet tData) {
+        Logger.i(JSONObject.toJSONString(tData));
+
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
             ToastUtils.showLong("修改成功");
+            if (!StringUtils.isEmpty(resultNickName)) {
+                mNickNameTextView.setText(resultNickName);
+            }
         } else {
             ToastUtils.showLong("修改失败");
         }
@@ -239,7 +250,6 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
                     break;
                 case CROP_SMALL_PICTURE:
                     Logger.i("crop out path--->" + outputImage.getAbsolutePath());
-
                     if (outputImage.exists()) {
                         RequestOptions myOptions = new RequestOptions()
                                 .transform(new GlideRoundTransform(this, 33));
@@ -248,6 +258,8 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
                     if (bottomSheetDialog != null && bottomSheetDialog.isShowing()) {
                         bottomSheetDialog.dismiss();
                     }
+                    resultNickName = "";
+                    updateInfoPresenterImp.updateHead("1", outputImage);
                     break;
             }
         }

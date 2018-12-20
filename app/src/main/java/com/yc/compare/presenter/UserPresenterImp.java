@@ -42,4 +42,9 @@ public class UserPresenterImp extends BasePresenterImp<UserView, UserInfoRet> im
     public void sendSms(String name, String smsCode) {
         userModelImp.sendSms(name, smsCode, this);
     }
+
+    @Override
+    public void forget(String name, String password) {
+        userModelImp.forget(name, password, this);
+    }
 }

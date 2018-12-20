@@ -15,4 +15,6 @@ public interface UserPresenter {
     void sendSms(String name, String smsCode);
 
     void otherLogin(OtherLoginBean otherLoginBean);
+
+    void forget(String name, String password);
 }

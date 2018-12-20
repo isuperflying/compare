@@ -32,7 +32,7 @@ public class EncryptionInterceptor implements Interceptor {
 
             MediaType mediaType = MediaType.parse("text/plain; charset=utf-8");
             byte[] strNewBody = RSAUtils.encryptByPublicKey(strOldBody, Constants.DEFAULT_PUBLIC_KEY);
-            Logger.e("加密之后的参数--->" + new String(strNewBody,"UTF-8"));
+            //Logger.e("加密之后的参数--->" + new String(strNewBody,"UTF-8"));
 
             //byte[] res = RSAUtils.decryptByPrivateKey(strNewBody,Constants.DEFAULT_PRIVATE_KEY);
             //Logger.e("加密之后再解密的参数--->" + new String(res,"UTF-8"));

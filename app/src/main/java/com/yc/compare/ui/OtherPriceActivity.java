@@ -17,7 +17,6 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.yc.compare.R;

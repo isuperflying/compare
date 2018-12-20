@@ -6,15 +6,14 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.yc.compare.api.UpdateServiceApi;
 import com.yc.compare.api.UploadApi;
-import com.yc.compare.api.UserServiceApi;
-import com.yc.compare.base.BaseModel;
+import com.yc.compare.base.BaseNoRsaModel;
 import com.yc.compare.base.IBaseRequestCallBack;
-import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.bean.UpdateInfoRet;
 
 import java.io.File;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,7 +24,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by admin on 2017/3/13.
  */
 
-public class UpdateInfoModelImp extends BaseModel implements UpdateInfoModel<UpdateInfoRet> {
+public class UpdateInfoModelImp extends BaseNoRsaModel implements UpdateInfoModel<UpdateInfoRet> {
 
     private Context context = null;
     private UpdateServiceApi updateServiceApi;
@@ -42,16 +41,21 @@ public class UpdateInfoModelImp extends BaseModel implements UpdateInfoModel<Upd
 
     @Override
     public void updateHead(String userId, File file, final IBaseRequestCallBack<UpdateInfoRet> iBaseRequestCallBack) {
+
+        // 创建 RequestBody，用于封装构建RequestBody
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        // MultipartBody.Part  和后端约定好Key，这里的partName是用image
+        MultipartBody.Part fileBody = MultipartBody.Part.createFormData("pic", file.getName(), requestFile);
+
         JSONObject params = new JSONObject();
         try {
-            params.put("userId", userId);
-            params.put("content", "");
+            params.put("uid", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        mCompositeSubscription.add(updateServiceApi.updateHead(requestBody)  //将subscribe添加到subscription，用于注销subscribe
+
+        mCompositeSubscription.add(updateServiceApi.updateHead(requestBody, fileBody)  //将subscribe添加到subscription，用于注销subscribe
                 .observeOn(AndroidSchedulers.mainThread())//指定事件消费线程
                 .subscribeOn(Schedulers.io())  //指定 subscribe() 发生在 IO 线程
                 .subscribe(new Subscriber<UpdateInfoRet>() {
@@ -93,7 +97,7 @@ public class UpdateInfoModelImp extends BaseModel implements UpdateInfoModel<Upd
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        mCompositeSubscription.add(updateServiceApi.updateHead(requestBody)  //将subscribe添加到subscription，用于注销subscribe
+        mCompositeSubscription.add(updateServiceApi.updateNickName(requestBody)  //将subscribe添加到subscription，用于注销subscribe
                 .observeOn(AndroidSchedulers.mainThread())//指定事件消费线程
                 .subscribeOn(Schedulers.io())  //指定 subscribe() 发生在 IO 线程
                 .subscribe(new Subscriber<UpdateInfoRet>() {

@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.GoodDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +42,7 @@
         <activity android:name=".ui.AboutActivity"></activity>
         <activity android:name=".ui.CollectActivity"></activity>
         <activity android:name=".ui.SearchActivity"></activity>
-        <activity android:name=".ui.GoodDetailActivity"></activity>
+        <activity android:name=".ui.MainActivity"></activity>
         <activity android:name=".ui.CommentActivity"></activity>
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -68,6 +68,17 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.yc.compare.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

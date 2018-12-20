@@ -98,19 +98,20 @@ public class MyFragment extends BaseFragment {
 
     @OnClick(R.id.layout_my_collect)
     void collect() {
-        Intent intent = new Intent(getActivity(), CollectActivity.class);
+        Intent intent = new Intent(getActivity(), userInfo != null ? CollectActivity.class : LoginActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.layout_tucao)
     void suggest() {
-        Intent intent = new Intent(getActivity(), SuggestActivity.class);
+
+        Intent intent = new Intent(getActivity(), userInfo != null ? SuggestActivity.class : LoginActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.layout_update_info)
     void updateUserInfo() {
-        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+        Intent intent = new Intent(getActivity(), userInfo != null ? UserInfoActivity.class : LoginActivity.class);
         startActivity(intent);
     }
 

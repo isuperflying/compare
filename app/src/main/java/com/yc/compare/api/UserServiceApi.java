@@ -28,4 +28,7 @@ public interface UserServiceApi {
     @POST("v1.user/thirdLogin")
     Observable<UserInfoRet> otherLogin(@Body RequestBody requestBody);
 
+
+    @POST("v1.user/findpass")
+    Observable<UserInfoRet> forget(@Body RequestBody requestBody);
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.blankj.utilcode.util.Utils;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.mob.MobSDK;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -36,7 +37,7 @@ public class App extends Application {
         MobSDK.init(this);
         AppContextUtil.init(this);
         applicationContext = this;
-
+        FileDownloader.setup(this);
     }
 
 }

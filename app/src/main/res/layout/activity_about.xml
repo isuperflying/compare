@@ -56,7 +56,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/layout_params"
+        android:id="@+id/layout_score"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:background="@color/white"
@@ -83,7 +83,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.2dp"
         android:background="@color/line_color"></View>
 
     <RelativeLayout

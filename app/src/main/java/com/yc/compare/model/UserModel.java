@@ -17,4 +17,6 @@ public interface UserModel<T> {
     void sendSms(String name, String smsCode, IBaseRequestCallBack<T> iBaseRequestCallBack);
 
     void otherLogin(OtherLoginBean otherLoginBean, IBaseRequestCallBack<T> iBaseRequestCallBack);
+
+    void forget(String name, String password, IBaseRequestCallBack<T> iBaseRequestCallBack);
 }
