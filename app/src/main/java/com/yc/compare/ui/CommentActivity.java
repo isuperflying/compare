@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
@@ -16,6 +17,7 @@ import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.CommentInfoPresenterImp;
 import com.yc.compare.ui.adapter.CommentAdapter;
 import com.yc.compare.ui.base.BaseFragmentActivity;
+import com.yc.compare.ui.custom.CommentDialog;
 import com.yc.compare.view.CommentInfoView;
 
 import butterknife.BindView;
@@ -24,7 +26,7 @@ import butterknife.OnClick;
 /**
  * Created by myflying on 2018/12/3.
  */
-public class CommentActivity extends BaseFragmentActivity implements CommentInfoView {
+public class CommentActivity extends BaseFragmentActivity implements CommentInfoView, CommentDialog.SendBackListener {
 
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
@@ -41,6 +43,8 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     private int pageSize = 20;
 
     private int currentPage = 1;
+
+    private CommentDialog commentDialog;
 
     @Override
     protected int getContextViewId() {
@@ -87,6 +91,7 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     @Override
     public void loadDataSuccess(CommentInfoRet tData) {
         avi.hide();
+        avi.setVisibility(View.GONE);
         Logger.i(JSONObject.toJSONString(tData));
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
             if (currentPage == 1) {
@@ -110,6 +115,16 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
         avi.hide();
     }
 
+
+    @OnClick(R.id.layout_bottom)
+    void showDialog() {
+        if(commentDialog == null){
+            commentDialog = new CommentDialog(CommentActivity.this, 1);
+            commentDialog.setSendBackListener(this);
+        }
+        commentDialog.show(getFragmentManager(), "dialog");
+    }
+
     @OnClick(R.id.iv_back)
     void back() {
         popBackStack();
@@ -119,5 +134,10 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     public void onBackPressed() {
         super.onBackPressed();
         popBackStack();
+    }
+
+    @Override
+    public void sendContent(String content, int type) {
+        Logger.i("content--->" + content);
     }
 }

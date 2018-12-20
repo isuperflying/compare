@@ -80,4 +80,6 @@
     <color name="min_price_color">#6f6f6f</color>
 
     <color name="collect_type_select_color">#ffe3e5</color>
+
+    <color name="bg_color">#7ff1f1f1</color>
 </resources>

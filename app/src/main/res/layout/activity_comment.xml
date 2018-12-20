@@ -63,10 +63,8 @@
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:background="@color/white"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:gravity="center">
 
             <TextView
@@ -90,20 +88,19 @@
                 android:textCursorDrawable="@null"
                 android:textSize="14sp" />
 
-            <LinearLayout
-                android:id="@+id/praise_layout"
+            <TextView
+                android:id="@+id/iv_praise"
                 android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/iv_praise"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:src="@mipmap/home_tab_mine_2" />
-            </LinearLayout>
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/push_bg"
+                android:clickable="false"
+                android:gravity="center"
+                android:text="发送"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
