@@ -1,15 +1,18 @@
 package com.yc.compare.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.yc.compare.App;
 import com.yc.compare.R;
 import com.yc.compare.bean.CountryInfoRet;
 import com.yc.compare.common.Constants;
@@ -65,13 +68,15 @@ public class HotCountryActivity extends BaseFragmentActivity implements CountryI
         avi.show();
         countryInfoPresenterImp.getCountryInfoList(currentPage);
 
-        hotCountryAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        hotCountryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onLoadMoreRequested() {
-                currentPage++;
-                countryInfoPresenterImp.getCountryInfoList(currentPage);
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                App.isShowBrand = true;
+                Intent intent = new Intent(HotCountryActivity.this, GoodListActivity.class);
+                intent.putExtra("country_id", hotCountryAdapter.getData().get(position).getId());
+                startActivity(intent);
             }
-        }, mHotCountryListView);
+        });
     }
 
     @Override

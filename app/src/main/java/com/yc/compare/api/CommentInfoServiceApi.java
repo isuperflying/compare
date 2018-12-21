@@ -1,5 +1,6 @@
 package com.yc.compare.api;
 
+import com.yc.compare.bean.AddCommentInfoRet;
 import com.yc.compare.bean.CommentInfoRet;
 
 import okhttp3.RequestBody;
@@ -14,4 +15,7 @@ public interface CommentInfoServiceApi {
 
     @POST("v1.goods/commentList")
     Observable<CommentInfoRet> getCommentInfoList(@Body RequestBody requestBody);
+
+    @POST("v1.goods/commentFb")
+    Observable<AddCommentInfoRet> addComment(@Body RequestBody requestBody);
 }

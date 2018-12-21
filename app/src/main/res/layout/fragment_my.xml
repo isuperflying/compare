@@ -98,6 +98,7 @@
                 android:background="@color/line_color"></View>
 
             <LinearLayout
+                android:id="@+id/layout_history"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -214,7 +215,18 @@
             android:textColor="@color/my_info_txt_color"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/tv_cache_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_right_cache"
+            android:textColor="@color/group_text_color"
+            android:textSize="13sp" />
+
         <ImageView
+            android:id="@+id/iv_right_cache"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -258,9 +270,11 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/layout_login_out"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="36dp">
+        android:layout_marginTop="36dp"
+        android:visibility="gone">
 
         <Button
             android:layout_width="match_parent"
@@ -269,6 +283,8 @@
             android:layout_marginRight="13dp"
             android:background="@drawable/login_out_bg"
             android:text="退出登录"
+            android:clickable="false"
+            android:focusableInTouchMode="false"
             android:textColor="@color/tab_selected_color"
             android:textSize="16sp" />
     </LinearLayout>

@@ -81,4 +81,5 @@ public class GoodInfo {
     public void setGoodsCountryNum(String goodsCountryNum) {
         this.goodsCountryNum = goodsCountryNum;
     }
+
 }

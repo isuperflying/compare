@@ -1,215 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="@mipmap/common_top_bg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:src="@mipmap/back_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:text="咨询详情"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_content"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:orientation="vertical">
+            android:layout_marginBottom="50dp"
+            android:background="@color/white">
 
             <LinearLayout
+                android:id="@+id/layout_content"
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:background="@mipmap/common_top_bg">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_gravity="bottom">
-
-                    <ImageView
-                        android:id="@+id/iv_back"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="12dp"
-                        android:src="@mipmap/back_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:text="咨询详情"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_news_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:text="新闻标题"
-                    android:textColor="@color/top_type_text_color"
-                    android:textSize="18sp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_news_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="作者:周杰伦"
-                        android:textColor="@color/news_other_color"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tv_news_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:text="2018-12-12"
-                        android:textColor="@color/news_other_color"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_web_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:gravity="center"
+                    android:layout_margin="12dp"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_news_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:text="新闻标题"
+                        android:textColor="@color/top_type_text_color"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="推荐文章" />
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
 
-                    <View
-                        android:layout_width="20dp"
-                        android:layout_height="2dp"
-                        android:background="@color/tab_selected_color"></View>
+                        <TextView
+                            android:id="@+id/tv_news_author"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="作者:周杰伦"
+                            android:textColor="@color/news_other_color"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_news_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="12dp"
+                            android:text="2018-12-12"
+                            android:textColor="@color/news_other_color"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/relevant_list"
+                <LinearLayout
+                    android:id="@+id/layout_web_view"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:layout_weight="1"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="相关商品" />
-
-                    <View
-                        android:layout_width="20dp"
-                        android:layout_height="2dp"
-                        android:background="@color/tab_selected_color"></View>
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/good_list"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="推荐文章" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="2dp"
+                            android:background="@color/tab_selected_color"></View>
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/relevant_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="相关商品" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="2dp"
+                            android:background="@color/tab_selected_color"></View>
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/good_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_user_comment"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="6dp"
-                android:background="@color/white"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_reply_send"
-                    android:layout_width="0dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/comment_input_bg"
-                    android:drawableLeft="@mipmap/left_edit"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:hint="来说几句吧"
-                    android:minHeight="32dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:singleLine="false"
-                    android:textColor="@color/top_type_text_color"
-                    android:textColorHint="@color/my_info_nickname_color"
-                    android:textCursorDrawable="@null"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:src="@mipmap/comment_infos" />
-
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="12dp"
-                    android:src="@mipmap/comment_share_icon" />
-            </LinearLayout>
-
-        </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
@@ -219,5 +180,67 @@
             android:layout_gravity="center"
             app:indicatorColor="@color/loading_color"
             app:indicatorName="BallBeatIndicator" />
+
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_send_commit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/comment_input_bg"
+                android:drawableLeft="@mipmap/comment_edit_icon"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:hint="来说两句吧"
+                android:minHeight="32dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:singleLine="false"
+                android:textColor="@color/top_type_text_color"
+                android:textColorHint="@color/line_color"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp" />
+
+            <FrameLayout
+                android:id="@+id/layout_comment_info"
+                android:layout_width="30dp"
+                android:layout_height="30dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/comment_infos" />
+                <TextView
+                    android:id="@+id/tv_comment_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="12dp"
+                    android:minWidth="12dp"
+                    android:textSize="6sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/send_press_bg"
+                    android:text="13"/>
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/iv_comment_share"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="12dp"
+                android:src="@mipmap/comment_share_icon" />
+        </LinearLayout>
     </FrameLayout>
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

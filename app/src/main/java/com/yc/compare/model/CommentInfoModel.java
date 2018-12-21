@@ -7,5 +7,7 @@ import com.yc.compare.base.IBaseRequestCallBack;
  */
 
 public interface CommentInfoModel<T> {
-    void getCommentInfoList(String gid,int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
+    void getCommentInfoList(String gid, int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
+
+    void addComment(String uid, String gid, String content, IBaseRequestCallBack<T> iBaseRequestCallBack);
 }

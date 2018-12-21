@@ -43,4 +43,8 @@
 
     <string name="update_txt">更新</string>
     <string name="cancel_txt">取消</string>
+
+    <string name="config_txt">确认</string>
+
+    <string name="share_content">喜欢海外购的朋友们的天堂，不用在到处打听产品在各个国家的价格，只需要这全球比价app，你就可以快速了解商品在全球不同国家的价格资料，为您挑选优惠的价格指引。</string>
 </resources>

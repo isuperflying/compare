@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:text="热门品牌"
+                android:text="浏览记录"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -45,7 +45,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/hot_brand_list"
+            android:id="@+id/history_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
@@ -57,6 +57,7 @@
             android:layout_gravity="center"
             app:indicatorColor="@color/loading_color"
             app:indicatorName="BallBeatIndicator" />
+
         <LinearLayout
             android:id="@+id/layout_no_data"
             android:layout_width="match_parent"

@@ -24,6 +24,9 @@ public class CollectInfo {
     @SerializedName("goods_country_num")
     private String goodsCountryNum;
 
+    @SerializedName("visit_id")
+    private String visitId;
+
     private boolean isChecked;
 
     public String getCollectId() {
@@ -80,5 +83,13 @@ public class CollectInfo {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public String getVisitId() {
+        return visitId;
+    }
+
+    public void setVisitId(String visitId) {
+        this.visitId = visitId;
     }
 }

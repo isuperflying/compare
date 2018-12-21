@@ -12,7 +12,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.yc.compare.R;
+import com.yc.compare.bean.AddCommentInfoRet;
 import com.yc.compare.bean.CommentInfoRet;
+import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.CommentInfoPresenterImp;
 import com.yc.compare.ui.adapter.CommentAdapter;
@@ -60,7 +62,7 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     public void initViews() {
         commentInfoPresenterImp = new CommentInfoPresenterImp(this, this);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("正在查询");
+        progressDialog.setMessage("正在操作");
 
         commentAdapter = new CommentAdapter(this, null);
         mCommentListView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,22 +91,36 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     }
 
     @Override
-    public void loadDataSuccess(CommentInfoRet tData) {
+    public void loadDataSuccess(ResultInfo tData) {
         avi.hide();
         avi.setVisibility(View.GONE);
         Logger.i(JSONObject.toJSONString(tData));
-        if (tData != null && tData.getCode() == Constants.SUCCESS) {
-            if (currentPage == 1) {
-                commentAdapter.setNewData(tData.getData().getList());
-            } else {
-                commentAdapter.addData(tData.getData().getList());
-                if (tData.getData().getList().size() == pageSize) {
-                    commentAdapter.loadMoreComplete();
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        if (tData.getCode() == Constants.SUCCESS) {
+            if (tData != null && tData instanceof CommentInfoRet) {
+                if (currentPage == 1) {
+                    commentAdapter.setNewData(((CommentInfoRet) tData).getData().getList());
                 } else {
-                    commentAdapter.loadMoreEnd();
+                    commentAdapter.addData(((CommentInfoRet) tData).getData().getList());
+                    if (((CommentInfoRet) tData).getData().getList().size() == pageSize) {
+                        commentAdapter.loadMoreComplete();
+                    } else {
+                        commentAdapter.loadMoreEnd();
+                    }
+                }
+            } else {
+                if (tData instanceof AddCommentInfoRet) {
+                    ToastUtils.showLong("评论成功");
+                    if (commentDialog != null) {
+                        commentDialog.hideProgressDialog();
+                        commentDialog.dismiss();
+                    }
                 }
             }
-
         } else {
             ToastUtils.showLong("数据异常,请重试");
         }
@@ -113,12 +129,15 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     @Override
     public void loadDataError(Throwable throwable) {
         avi.hide();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
 
     @OnClick(R.id.layout_bottom)
     void showDialog() {
-        if(commentDialog == null){
+        if (commentDialog == null) {
             commentDialog = new CommentDialog(CommentActivity.this, 1);
             commentDialog.setSendBackListener(this);
         }
@@ -139,5 +158,10 @@ public class CommentActivity extends BaseFragmentActivity implements CommentInfo
     @Override
     public void sendContent(String content, int type) {
         Logger.i("content--->" + content);
+        //ToastUtils.showLong("content--->" + content);
+        commentInfoPresenterImp.addComment("1", "566", content);
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 }

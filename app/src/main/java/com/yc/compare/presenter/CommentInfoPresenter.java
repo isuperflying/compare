@@ -6,4 +6,5 @@ package com.yc.compare.presenter;
 
 public interface CommentInfoPresenter {
     void getCommentInfoList(String gid,int page);
+    void addComment(String uid, String gid, String content);
 }

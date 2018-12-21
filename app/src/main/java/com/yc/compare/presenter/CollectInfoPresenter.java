@@ -7,4 +7,5 @@ package com.yc.compare.presenter;
 public interface CollectInfoPresenter {
     void getCollectInfoList(String uid,String cid,int page);
     void deleteCollect(String cids);
+    void historyList(String uid,int page);
 }

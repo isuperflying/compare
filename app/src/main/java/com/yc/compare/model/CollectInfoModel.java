@@ -10,4 +10,6 @@ public interface CollectInfoModel<T> {
     void getCollectInfoList(String uid,String cid,int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
 
     void deleteCollect(String cids, IBaseRequestCallBack<T> iBaseRequestCallBack);
+
+    void historyList(String uid,int page, IBaseRequestCallBack<T> iBaseRequestCallBack);
 }

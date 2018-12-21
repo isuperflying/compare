@@ -25,4 +25,7 @@ public interface CollectInfoServiceApi {
 
     @POST("v1.user/delCollect")
     Observable<CollectInfoRet> deleteCollect(@Body RequestBody requestBody);
+
+    @POST("v1.user/visitList")
+    Observable<CollectInfoRet> historyList(@Body RequestBody requestBody);
 }

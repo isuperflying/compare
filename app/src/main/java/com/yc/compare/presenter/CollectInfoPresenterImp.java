@@ -33,4 +33,9 @@ public class CollectInfoPresenterImp extends BasePresenterImp<CollectInfoView, C
     public void deleteCollect(String cids) {
         collectInfoModelImp.deleteCollect(cids, this);
     }
+
+    @Override
+    public void historyList(String uid, int page) {
+        collectInfoModelImp.historyList(uid, page, this);
+    }
 }

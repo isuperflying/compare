@@ -1,15 +1,19 @@
 package com.yc.compare.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.yc.compare.App;
 import com.yc.compare.R;
 import com.yc.compare.bean.BrandInfoRet;
 import com.yc.compare.common.Constants;
@@ -31,6 +35,9 @@ public class HotBrandActivity extends BaseFragmentActivity implements BrandInfoV
 
     @BindView(R.id.hot_brand_list)
     RecyclerView mHotBrandListView;
+
+    @BindView(R.id.layout_no_data)
+    LinearLayout mNoDataLayout;
 
     private HotBrandAdapter hotBrandAdapter;
 
@@ -64,14 +71,15 @@ public class HotBrandActivity extends BaseFragmentActivity implements BrandInfoV
 
         avi.show();
         brandInfoPresenterImp.getBrandInfoList(currentPage);
-
-        hotBrandAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        hotBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onLoadMoreRequested() {
-                currentPage++;
-                brandInfoPresenterImp.getBrandInfoList(currentPage);
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                App.isShowBrand = false;
+                Intent intent = new Intent(HotBrandActivity.this, GoodListActivity.class);
+                intent.putExtra("brand_id", hotBrandAdapter.getData().get(position).getId());
+                startActivity(intent);
             }
-        }, mHotBrandListView);
+        });
     }
 
     @Override
@@ -89,9 +97,15 @@ public class HotBrandActivity extends BaseFragmentActivity implements BrandInfoV
         avi.hide();
         Logger.i(JSONObject.toJSONString(tData));
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
-            hotBrandAdapter.setNewData(tData.getData());
-            hotBrandAdapter.loadMoreEnd();
+            if (tData.getData() != null && tData.getData().size() > 0) {
+                hotBrandAdapter.setNewData(tData.getData());
+            } else {
+                mHotBrandListView.setVisibility(View.GONE);
+                mNoDataLayout.setVisibility(View.VISIBLE);
+            }
         } else {
+            mHotBrandListView.setVisibility(View.GONE);
+            mNoDataLayout.setVisibility(View.VISIBLE);
             ToastUtils.showLong("数据异常,请重试");
         }
     }

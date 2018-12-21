@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -24,6 +26,12 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.example.zhouwei.library.CustomPopWindow;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.yc.compare.R;
 import com.yc.compare.bean.AddCollectInfoRet;
 import com.yc.compare.bean.GoodDetailInfo;
@@ -51,7 +59,7 @@ import butterknife.OnClick;
 /**
  * Created by myflying on 2018/12/6.
  */
-public class GoodDetailActivity extends BaseFragmentActivity implements GoodDetailInfoView {
+public class GoodDetailActivity extends BaseFragmentActivity implements GoodDetailInfoView, View.OnClickListener {
 
     @BindView(R.id.content_layout)
     CoordinatorLayout coordinatorLayout;
@@ -131,6 +139,10 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     private int[] dataArr = new int[]{150, 120, 200, 88, 139, 66};
 
+    private ShareAction shareAction;
+
+    BottomSheetDialog shareDialog;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_good_detail;
@@ -173,6 +185,20 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
         Logger.i("width--->" + ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() / 6);
         goodDetailInfoPresenterImp.getGoodDetailInfoByParams("1", "1");
+
+        initShareDialog();
+
+        if (shareAction == null) {
+            UMImage image = new UMImage(this, R.drawable.share_logo);//资源文件
+            shareAction = new ShareAction(this);
+
+            UMWeb web = new UMWeb("https://www.baidu.com");
+            web.setTitle("分享的标题");//标题
+            web.setThumb(image);  //缩略图
+            web.setDescription(getResources().getString(R.string.share_content));//描述
+
+            shareAction.withMedia(web).setCallback(shareListener);//回调监听器
+        }
     }
 
     public void initBanner(String[] blist) {
@@ -225,12 +251,29 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         }
     }
 
+    public void initShareDialog() {
+        View shareView = LayoutInflater.from(this).inflate(R.layout.share_view, null);
+        LinearLayout weixinLayout = shareView.findViewById(R.id.layout_weixin);
+        LinearLayout cicleLayout = shareView.findViewById(R.id.layout_circle);
+        LinearLayout qqLayout = shareView.findViewById(R.id.layout_qq);
+        LinearLayout qzoneLayout = shareView.findViewById(R.id.layout_qzone);
+
+        weixinLayout.setOnClickListener(this);
+        cicleLayout.setOnClickListener(this);
+        qqLayout.setOnClickListener(this);
+        qzoneLayout.setOnClickListener(this);
+
+        if (shareDialog == null) {
+            shareDialog = new BottomSheetDialog(this);
+            shareDialog.setContentView(shareView);
+        }
+    }
+
     @OnClick(R.id.iv_share)
     void share() {
-        View paramsView = LayoutInflater.from(this).inflate(R.layout.share_view, null);
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(paramsView);
-        bottomSheetDialog.show();
+        if (shareDialog != null && !shareDialog.isShowing()) {
+            shareDialog.show();
+        }
     }
 
     @OnClick(R.id.layout_follow)
@@ -353,6 +396,46 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     }
 
+    private UMShareListener shareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(GoodDetailActivity.this, "分享成功", Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(GoodDetailActivity.this, "分享失败", Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(GoodDetailActivity.this, "取消分享", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
     @OnClick(R.id.iv_back)
     void back() {
         popBackStack();
@@ -362,5 +445,35 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     public void onBackPressed() {
         super.onBackPressed();
         popBackStack();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_weixin:
+                shareAction.setPlatform(SHARE_MEDIA.WEIXIN).share();
+                break;
+            case R.id.layout_circle:
+                shareAction.setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).share();
+                break;
+            case R.id.layout_qq:
+                shareAction.setPlatform(SHARE_MEDIA.QQ).share();
+                break;
+            case R.id.layout_qzone:
+                shareAction.setPlatform(SHARE_MEDIA.QZONE).share();
+                break;
+            default:
+                break;
+        }
+
+        if (shareDialog != null && shareDialog.isShowing()) {
+            shareDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 }

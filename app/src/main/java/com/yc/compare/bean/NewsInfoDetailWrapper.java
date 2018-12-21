@@ -18,6 +18,9 @@ public class NewsInfoDetailWrapper extends ResultInfo {
     @SerializedName("relevant_goods")
     private List<GoodInfo> relevantGoodsList;
 
+    @SerializedName("comment_num")
+    private int commentNum;
+
     public NewsInfo getArticleInfo() {
         return articleInfo;
     }
@@ -40,5 +43,13 @@ public class NewsInfoDetailWrapper extends ResultInfo {
 
     public void setRelevantGoodsList(List<GoodInfo> relevantGoodsList) {
         this.relevantGoodsList = relevantGoodsList;
+    }
+
+    public int getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(int commentNum) {
+        this.commentNum = commentNum;
     }
 }

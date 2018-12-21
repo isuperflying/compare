@@ -180,6 +180,8 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
 
     private GroupAdapter gAdapter;
 
+    private String keyWord;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_good_list;
@@ -195,8 +197,20 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
     public void initViews() {
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null && !StringUtils.isEmpty(bundle.getString("cid"))) {
-            cid = bundle.getString("cid");
+        if (bundle != null) {
+            if (!StringUtils.isEmpty(bundle.getString("cid"))) {
+                cid = bundle.getString("cid");
+            }
+            if (!StringUtils.isEmpty(bundle.getString("key_word"))) {
+                keyWord = bundle.getString("key_word");
+                mKeyWordEditText.setText(keyWord);
+            }
+            if (!StringUtils.isEmpty(bundle.getString("brand_id"))) {
+                queryBrandId = bundle.getString("brand_id");
+            }
+            if (!StringUtils.isEmpty(bundle.getString("country_id"))) {
+                queryCountryId = bundle.getString("country_id");
+            }
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30), SizeUtils.dp2px(30));
@@ -224,7 +238,7 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
         goodInfoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(GoodListActivity.this,GoodDetailActivity.class);
+                Intent intent = new Intent(GoodListActivity.this, GoodDetailActivity.class);
                 startActivity(intent);
             }
         });
@@ -308,6 +322,10 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
 
         condition.setPage(currentPage + "");
         condition.setCategoryId(cid);
+        condition.setKeyWord(keyWord);
+        condition.setBrandId(queryBrandId);
+        condition.setCountryId(queryCountryId);
+
         if (type < 4) {
             condition.setSearchCondition(searchTypeValues[type]);
         }
@@ -678,8 +696,9 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
                             ToastUtils.showLong("请输入关键词后搜索");
                             break;
                         }
+                        keyWord = textView.getText().toString();
                         condition.setPage(currentPage + "");
-                        condition.setKeyWord(textView.getText().toString());
+                        condition.setKeyWord(keyWord);
                         goodInfoPresenterImp.getGoodInfoByParams(condition);
                         App.isShowBrand = false;
                         mBrandLayout.setVisibility(View.GONE);

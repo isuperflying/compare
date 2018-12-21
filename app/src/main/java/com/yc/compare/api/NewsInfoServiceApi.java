@@ -1,5 +1,6 @@
 package com.yc.compare.api;
 
+import com.yc.compare.bean.NewsCommentRet;
 import com.yc.compare.bean.NewsInfoDetailRet;
 import com.yc.compare.bean.NewsInfoRet;
 
@@ -18,4 +19,10 @@ public interface NewsInfoServiceApi {
 
     @POST("v1.article/articleInfo")
     Observable<NewsInfoDetailRet> getNewsDetail(@Body RequestBody requestBody);
+
+    @POST("v1.article/commentList")
+    Observable<NewsCommentRet> getNewsCommentList(@Body RequestBody requestBody);
+
+    @POST("v1.article/commentFb")
+    Observable<NewsCommentRet> addNewsComment(@Body RequestBody requestBody);
 }
