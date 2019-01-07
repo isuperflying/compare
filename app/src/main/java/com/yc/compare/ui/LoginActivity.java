@@ -158,7 +158,7 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         eventHandler = new EventHandler() {
             public void afterEvent(int event, int result, Object data) {
@@ -348,7 +348,7 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         if (eventHandler != null) {
             SMSSDK.unregisterEventHandler(eventHandler);

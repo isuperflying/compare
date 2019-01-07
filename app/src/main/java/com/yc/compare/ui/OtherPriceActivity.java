@@ -61,6 +61,8 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
 
     private OtherPriceInfoPresenterImp otherPriceInfoPresenterImp;
 
+    private String goodId;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_other_price;
@@ -73,6 +75,12 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
     }
 
     public void initViews() {
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getString("good_id") != null) {
+            goodId = bundle.getString("good_id");
+        }
+
         otherPriceInfoPresenterImp = new OtherPriceInfoPresenterImp(this, this);
 
         otherPriceAdapter = new OtherPriceAdapter(this, null);
@@ -84,7 +92,7 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
         otherPriceAdapter.addHeaderView(headView);
 
         avi.show();
-        otherPriceInfoPresenterImp.getOtherPriceInfoList("566", "");
+        otherPriceInfoPresenterImp.getOtherPriceInfoList(goodId, "");
 
         mKeyWordEditText.setOnEditorActionListener(new EditorActionListener());
     }
@@ -139,7 +147,7 @@ public class OtherPriceActivity extends BaseFragmentActivity implements OtherPri
                         }
 
                         KeyboardUtils.hideSoftInput(OtherPriceActivity.this);
-                        otherPriceInfoPresenterImp.getOtherPriceInfoList("1", mKeyWordEditText.getText().toString());
+                        otherPriceInfoPresenterImp.getOtherPriceInfoList(goodId, mKeyWordEditText.getText().toString());
                     }
                     break;
                 default:

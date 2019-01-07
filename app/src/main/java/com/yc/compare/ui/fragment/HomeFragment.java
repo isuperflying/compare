@@ -5,9 +5,12 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,14 +20,13 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.BannerInfo;
 import com.yc.compare.bean.CategoryInfo;
-import com.yc.compare.bean.HomeDataInfoRet;
-import com.yc.compare.common.Constants;
+import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.presenter.HomeDataPresenterImp;
+import com.yc.compare.ui.GoodDetailActivity;
 import com.yc.compare.ui.GoodListActivity;
 import com.yc.compare.ui.HotBrandActivity;
 import com.yc.compare.ui.HotCountryActivity;
@@ -36,6 +38,7 @@ import com.yc.compare.ui.custom.GlideImageLoader;
 import com.yc.compare.ui.fragment.sub.MainAllFragment;
 import com.yc.compare.view.HomeDataView;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,7 @@ import butterknife.OnClick;
  * Created by iflying on 2017/12/14.
  */
 
-public class HomeFragment extends BaseFragment implements HomeDataView {
+public class HomeFragment extends BaseFragment implements HomeDataView,AppBarLayout.OnOffsetChangedListener{
 
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
@@ -101,6 +104,18 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
 
     private String newsId;
 
+    private String hotLfGoodId;
+
+    private String hotRtGoodId;
+
+    private String hotRbGoodId;
+
+    private int specialLfJumpType;
+
+    private int specialRtJumpType;
+
+    private int specialRbJumpType;
+
     @Override
     protected View onCreateView() {
         View root = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home, null);
@@ -132,6 +147,22 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
 
             }
         });
+
+        appBarLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    for (int i = 0; i < mViewPager.getChildCount(); i++) {
+                        View view = mViewPager.getChildAt(i);
+                        if (view instanceof RecyclerView) {
+                            ViewCompat.stopNestedScroll(view);
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
         homeDataPresenterImp.initData();
     }
 
@@ -152,7 +183,7 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         }
     }
 
-    public void initBanner(List<BannerInfo> blist) {
+    public void initBanner(final List<BannerInfo> blist) {
         List<String> urls = new ArrayList<>();
         for (int i = 0; i < blist.size(); i++) {
             urls.add(blist.get(i).getAdImage());
@@ -163,6 +194,30 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         mBanner.setImages(urls);
         //banner设置方法全部调用完毕时最后调用
         mBanner.start();
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                BannerInfo bannerInfo = blist.get(position);
+
+                int tempId = bannerInfo.getGoType();
+
+                if (tempId == 0) {
+                    return;
+                }
+
+                if (tempId == 1) {
+                    Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+                    intent.putExtra("good_id", bannerInfo.getObjectId());
+                    startActivity(intent);
+                }
+
+                if (tempId == 2) {
+                    Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+                    intent.putExtra("nid", bannerInfo.getObjectId());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.layout_sale)
@@ -196,6 +251,72 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         startActivity(intent);
     }
 
+    @OnClick(R.id.iv_rec1)
+    void hotLfGoodDetail() {
+        if (StringUtils.isEmpty(hotLfGoodId)) {
+            return;
+        }
+
+        if (specialLfJumpType == 0) {
+            return;
+        }
+
+        if (specialLfJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotLfGoodId);
+            startActivity(intent);
+        }
+        if (specialLfJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotLfGoodId) ? "" : hotLfGoodId);
+            startActivity(intent);
+        }
+    }
+
+    @OnClick(R.id.iv_rec2)
+    void hotRtGoodDetail() {
+        if (StringUtils.isEmpty(hotRtGoodId)) {
+            return;
+        }
+
+        if (specialRtJumpType == 0) {
+            return;
+        }
+
+        if (specialRtJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotRtGoodId);
+            startActivity(intent);
+        }
+        if (specialRtJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotRtGoodId) ? "" : hotRtGoodId);
+            startActivity(intent);
+        }
+    }
+
+    @OnClick(R.id.iv_rec3)
+    void hotRbGoodDetail() {
+        if (StringUtils.isEmpty(hotRbGoodId)) {
+            return;
+        }
+
+        if (specialRbJumpType == 0) {
+            return;
+        }
+
+        if (specialRbJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotRbGoodId);
+            startActivity(intent);
+        }
+        if (specialRbJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotRbGoodId) ? "" : hotRbGoodId);
+            startActivity(intent);
+        }
+    }
+
     /**
      * @descriptoin 请求前加载progress
      */
@@ -217,29 +338,35 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
      * @descriptoin 请求数据成功
      */
     @Override
-    public void loadDataSuccess(HomeDataInfoRet tData) {
-        if (tData != null && tData.getCode() == Constants.SUCCESS) {
-            if (tData.getData() != null) {
-                initBanner(tData.getData().getBanner());
-                initFragments(tData.getData().getCategoryInfoList());
-                if (tData.getData().getNews() != null && tData.getData().getNews().size() > 0) {
-                    mNewsTextView.setText(tData.getData().getNews().get(0).getTitle());
-                    newsId = tData.getData().getNews().get(0).getId();
-                }
-
-                if (tData.getData().getSpecial() != null) {
-                    if (tData.getData().getSpecial().size() >= 1) {
-                        Glide.with(this).load(tData.getData().getSpecial().get(0).getImg()).into(mRec1ImageView);
-                    }
-                    if (tData.getData().getSpecial().size() >= 2) {
-                        Glide.with(this).load(tData.getData().getSpecial().get(1).getImg()).into(mRec2ImageView);
-                    }
-                    if (tData.getData().getSpecial().size() >= 3) {
-                        Glide.with(this).load(tData.getData().getSpecial().get(2).getImg()).into(mRec3ImageView);
-                    }
-                }
-            }
-        }
+    public void loadDataSuccess(ResultInfo tData) {
+//        if (tData != null && tData.getCode() == Constants.SUCCESS) {
+//            if (tData.getData() != null) {
+//                initBanner(tData.getData().getBanner());
+//                initFragments(tData.getData().getCategoryInfoList());
+//                if (tData.getData().getNews() != null && tData.getData().getNews().size() > 0) {
+//                    mNewsTextView.setText(tData.getData().getNews().get(0).getTitle());
+//                    newsId = tData.getData().getNews().get(0).getId();
+//                }
+//
+//                if (tData.getData().getSpecial() != null) {
+//                    if (tData.getData().getSpecial().size() >= 1) {
+//                        specialLfJumpType = tData.getData().getSpecial().get(0).getGoType();
+//                        hotLfGoodId = tData.getData().getSpecial().get(0).getObjectId();
+//                        Glide.with(this).load(tData.getData().getSpecial().get(0).getAdImage()).into(mRec1ImageView);
+//                    }
+//                    if (tData.getData().getSpecial().size() >= 2) {
+//                        specialRtJumpType = tData.getData().getSpecial().get(1).getGoType();
+//                        hotRtGoodId = tData.getData().getSpecial().get(1).getObjectId();
+//                        Glide.with(this).load(tData.getData().getSpecial().get(1).getAdImage()).into(mRec2ImageView);
+//                    }
+//                    if (tData.getData().getSpecial().size() >= 3) {
+//                        specialRbJumpType = tData.getData().getSpecial().get(2).getGoType();
+//                        hotRbGoodId = tData.getData().getSpecial().get(2).getObjectId();
+//                        Glide.with(this).load(tData.getData().getSpecial().get(2).getAdImage()).into(mRec3ImageView);
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -249,5 +376,10 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
     @Override
     public void loadDataError(Throwable throwable) {
 
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        Logger.i("verticalOffset--->" + verticalOffset);
     }
 }

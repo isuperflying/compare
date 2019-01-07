@@ -47,15 +47,19 @@ public class UpdateInfoModelImp extends BaseNoRsaModel implements UpdateInfoMode
         // MultipartBody.Part  和后端约定好Key，这里的partName是用image
         MultipartBody.Part fileBody = MultipartBody.Part.createFormData("pic", file.getName(), requestFile);
 
-        JSONObject params = new JSONObject();
-        try {
-            params.put("uid", userId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
+//        JSONObject params = new JSONObject();
+//        try {
+//            params.put("uid", userId);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
 
-        mCompositeSubscription.add(updateServiceApi.updateHead(requestBody, fileBody)  //将subscribe添加到subscription，用于注销subscribe
+        RequestBody description =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), userId);
+
+        mCompositeSubscription.add(updateServiceApi.updateHead(description, fileBody)  //将subscribe添加到subscription，用于注销subscribe
                 .observeOn(AndroidSchedulers.mainThread())//指定事件消费线程
                 .subscribeOn(Schedulers.io())  //指定 subscribe() 发生在 IO 线程
                 .subscribe(new Subscriber<UpdateInfoRet>() {

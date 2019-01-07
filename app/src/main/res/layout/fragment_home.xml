@@ -13,11 +13,11 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            app:layout_behavior="com.yuruiyin.appbarlayoutbehavior.AppBarLayoutBehavior"
-            app:scrimAnimationDuration="0"
             android:background="@android:color/transparent"
-            android:gravity="center">
+            android:focusable="true"
+            android:gravity="center"
+            app:layout_behavior="com.yc.compare.ui.custom.FixBounceV26Behavior"
+            app:scrimAnimationDuration="0">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbarLayout"
@@ -170,11 +170,10 @@
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:layout_marginLeft="6dp"
-                                    android:layout_toRightOf="@+id/tv_hot_hint"
-                                    android:text="马蓉最新背包同款"
-                                    android:maxLines="1"
-                                    android:ellipsize="end"
                                     android:layout_marginRight="24dp"
+                                    android:layout_toRightOf="@+id/tv_hot_hint"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
                                     android:textColor="@color/black"
                                     android:textSize="13sp" />
 
@@ -196,15 +195,14 @@
                         android:layout_marginLeft="14dp"
                         android:layout_marginRight="14dp"
                         android:background="@drawable/top_type_bg"
-                        android:orientation="horizontal"
                         android:focusable="false"
+                        android:orientation="horizontal"
                         android:padding="6dp">
 
                         <ImageView
                             android:id="@+id/iv_rec1"
                             android:layout_width="126dp"
-                            android:layout_height="192dp"
-                            android:src="@mipmap/rec1" />
+                            android:layout_height="192dp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -215,15 +213,13 @@
                             <ImageView
                                 android:id="@+id/iv_rec2"
                                 android:layout_width="190dp"
-                                android:layout_height="93dp"
-                                android:src="@mipmap/rec2" />
+                                android:layout_height="93dp"/>
 
                             <ImageView
                                 android:id="@+id/iv_rec3"
                                 android:layout_width="190dp"
                                 android:layout_height="93dp"
-                                android:layout_marginTop="6dp"
-                                android:src="@mipmap/rec3" />
+                                android:layout_marginTop="6dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -252,12 +248,12 @@
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tab_layout"
-                    app:tabTextColor="@color/black"
-                    app:tabIndicatorColor="@color/tab_selected_color"
                     android:layout_width="333dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/tab_type_bg"
-                    android:layout_height="40dp"></android.support.design.widget.TabLayout>
+                    app:tabIndicatorColor="@color/tab_selected_color"
+                    app:tabTextColor="@color/black"></android.support.design.widget.TabLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -298,10 +294,10 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:gravity="left|center"
-            android:hint="搜索内容"
             android:clickable="false"
             android:focusable="false"
+            android:gravity="left|center"
+            android:hint="搜索内容"
             android:textSize="13sp" />
     </LinearLayout>
 </FrameLayout>

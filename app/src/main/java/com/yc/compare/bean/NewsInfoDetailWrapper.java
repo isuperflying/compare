@@ -13,7 +13,7 @@ public class NewsInfoDetailWrapper extends ResultInfo {
     private NewsInfo articleInfo;
 
     @SerializedName("article_recommend")
-    private List<NewsInfo> articleRecommendList;
+    private List<RelevantInfo> articleRecommendList;
 
     @SerializedName("relevant_goods")
     private List<GoodInfo> relevantGoodsList;
@@ -29,11 +29,11 @@ public class NewsInfoDetailWrapper extends ResultInfo {
         this.articleInfo = articleInfo;
     }
 
-    public List<NewsInfo> getArticleRecommendList() {
+    public List<RelevantInfo> getArticleRecommendList() {
         return articleRecommendList;
     }
 
-    public void setArticleRecommendList(List<NewsInfo> articleRecommendList) {
+    public void setArticleRecommendList(List<RelevantInfo> articleRecommendList) {
         this.articleRecommendList = articleRecommendList;
     }
 

@@ -82,4 +82,6 @@
     <color name="collect_type_select_color">#ffe3e5</color>
 
     <color name="bg_color">#7ff1f1f1</color>
+
+    <color name="comment_dialog_bg_color">#f2f2f2</color>
 </resources>

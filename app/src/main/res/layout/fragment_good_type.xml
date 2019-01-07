@@ -26,11 +26,14 @@
                 android:src="@mipmap/search_icon" />
 
             <EditText
+                android:id="@+id/et_key_word"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:background="@null"
                 android:hint="搜索内容"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>

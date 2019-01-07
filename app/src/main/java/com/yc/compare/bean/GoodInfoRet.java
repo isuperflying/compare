@@ -5,7 +5,7 @@ package com.yc.compare.bean;
  */
 public class GoodInfoRet extends ResultInfo {
 
-    private GoodInfoWrapper data;
+    public GoodInfoWrapper data;
 
     public GoodInfoWrapper getData() {
         return data;

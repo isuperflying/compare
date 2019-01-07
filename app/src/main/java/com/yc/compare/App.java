@@ -27,9 +27,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        UMConfigure.init(this,"5c0f80c2f1f556c767000080"
-                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");//58edcfeb310c93091c000be2 5965ee00734be40b580001a0
-        UMConfigure.isDebugLog();
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");//58edcfeb310c93091c000be2 5965ee00734be40b580001a0
+
         PlatformConfig.setWeixin("wxda79bd5452cd1a56", "e6eb27a519e908400b9ec9f2368f1539");
         PlatformConfig.setQQZone("1107940377", "2I8ULllaGEmvLS5k");
 

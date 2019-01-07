@@ -94,7 +94,7 @@ public class MyFragment extends BaseFragment {
                         .transform(new GlideRoundTransform(getActivity(), 35));
                 Glide.with(getActivity()).load(userInfo.getHeadImage()).apply(myOptions).into(mUserHeadImageView);
                 mNickNameTextView.setText(StringUtils.isEmpty(userInfo.getNickName()) ? "火星用户" : userInfo.getNickName());
-                mClickLoginTextView.setText(StringUtils.isEmpty(userInfo.getNickName()) ? "用户ID：xxxx" : "用户ID：" + userInfo.getUserId());
+                mClickLoginTextView.setText(StringUtils.isEmpty(userInfo.getUserId()) ? "用户ID：xxxx" : "用户ID：" + userInfo.getUserId());
             }
         } else {
             mLoginOutLayout.setVisibility(View.GONE);

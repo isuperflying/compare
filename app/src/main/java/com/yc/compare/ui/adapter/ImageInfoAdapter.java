@@ -26,6 +26,6 @@ public class ImageInfoAdapter extends BaseQuickAdapter<ImageInfo, BaseViewHolder
 
     @Override
     protected void convert(final BaseViewHolder helper, final ImageInfo item) {
-        Glide.with(mContext).asBitmap().load(item.getImgUrl()).into((ImageView) helper.itemView.findViewById(R.id.iv_good_item));
+        Glide.with(mContext).load(item.getImgUrl()).into((ImageView) helper.itemView.findViewById(R.id.iv_good_item));
     }
 }

@@ -18,7 +18,7 @@ public interface UpdateServiceApi {
 
     @Multipart
     @POST("v1.user/editHeadPic")
-    Observable<UpdateInfoRet> updateHead(@Part("requestBody") RequestBody requestBody,
+    Observable<UpdateInfoRet> updateHead(@Part("uid") RequestBody requestBody,
                                          @Part MultipartBody.Part file);
 
     @POST("v1.user/editNickname")

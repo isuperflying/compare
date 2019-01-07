@@ -3,7 +3,7 @@
 
     <string name="tab_home">首页</string>
     <string name="tab_fight">产品列表</string>
-    <string name="tab_show">咨询中心</string>
+    <string name="tab_show">资讯中心</string>
     <string name="tab_my">我的</string>
 
     <string name="user_input_name">用户名/手机号</string>
@@ -34,6 +34,14 @@
     <string name="permission_storage_never_ask_again">不再询问</string>
     <string name="permission_storage_rationale">必须要开启存储权限，才能正常使用，请开启</string>
     <string name="permission_storage_denied">禁止了存储权限，开启权限才能正常使用</string>
+
+    <string name="permission_readphone_never_ask_again">不再询问</string>
+    <string name="permission_readphone_rationale">请开启权限</string>
+    <string name="permission_readphone_denied">禁止了读取手机识别码权限，开启权限才能正常使用</string>
+
+    <string name="permission_camera_never_ask_again">不再询问</string>
+    <string name="permission_camera_rationale">开启相机权限才能正常使用</string>
+    <string name="permission_camera_denied">禁止了相机权限，开启权限才能正常使用</string>
 
     <string name="button_allow">开启</string>
     <string name="button_deny">拒绝</string>

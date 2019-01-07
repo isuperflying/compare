@@ -6,13 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.yc.compare.R;
 import com.yc.compare.bean.CollectInfoRet;
 import com.yc.compare.bean.ResultInfo;
+import com.yc.compare.bean.UserInfo;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.CollectInfoPresenterImp;
 import com.yc.compare.ui.adapter.CollectAdapter;
@@ -43,6 +48,8 @@ public class HistoryActivity extends BaseFragmentActivity implements CollectInfo
 
     private int currentPage = 1;
 
+    private UserInfo userInfo;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_history;
@@ -56,6 +63,11 @@ public class HistoryActivity extends BaseFragmentActivity implements CollectInfo
 
     public void initViews() {
 
+        if (!StringUtils.isEmpty(SPUtils.getInstance().getString(Constants.USER_INFO))) {
+            Logger.i(SPUtils.getInstance().getString(Constants.USER_INFO));
+            userInfo = JSON.parseObject(SPUtils.getInstance().getString(Constants.USER_INFO), new TypeReference<UserInfo>() {
+            });
+        }
 
         collectInfoPresenterImp = new CollectInfoPresenterImp(this, this);
 
@@ -68,12 +80,12 @@ public class HistoryActivity extends BaseFragmentActivity implements CollectInfo
             @Override
             public void onLoadMoreRequested() {
                 currentPage++;
-                collectInfoPresenterImp.historyList("1", currentPage);
+                collectInfoPresenterImp.historyList(userInfo != null ? userInfo.getUserId() : "", currentPage);
             }
         }, mCollectListView);
 
         avi.show();
-        collectInfoPresenterImp.historyList("1", currentPage);
+        collectInfoPresenterImp.historyList(userInfo != null ? userInfo.getUserId() : "", currentPage);
     }
 
     @Override

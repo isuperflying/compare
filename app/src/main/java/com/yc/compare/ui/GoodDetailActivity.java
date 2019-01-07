@@ -1,29 +1,38 @@
 package com.yc.compare.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.zhouwei.library.CustomPopWindow;
 import com.orhanobut.logger.Logger;
 import com.umeng.socialize.ShareAction;
@@ -38,6 +47,7 @@ import com.yc.compare.bean.GoodDetailInfo;
 import com.yc.compare.bean.GoodDetailInfoRet;
 import com.yc.compare.bean.ImageInfo;
 import com.yc.compare.bean.ResultInfo;
+import com.yc.compare.bean.UserInfo;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.AddCollectInfoPresenterImp;
 import com.yc.compare.presenter.GoodDetailInfoPresenterImp;
@@ -50,6 +60,11 @@ import com.yc.compare.ui.custom.LineChartView;
 import com.yc.compare.view.GoodDetailInfoView;
 import com.youth.banner.Banner;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +75,9 @@ import butterknife.OnClick;
  * Created by myflying on 2018/12/6.
  */
 public class GoodDetailActivity extends BaseFragmentActivity implements GoodDetailInfoView, View.OnClickListener {
+
+    @BindView(R.id.scroll_view)
+    NestedScrollView scrollView;
 
     @BindView(R.id.content_layout)
     CoordinatorLayout coordinatorLayout;
@@ -106,6 +124,9 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     @BindView(R.id.good_image_list)
     RecyclerView mGoodImageListView;
 
+    @BindView(R.id.layout_web_view)
+    LinearLayout mGoodDetailView;
+
     @BindView(R.id.tv_comment_count)
     TextView mCountTextView;
 
@@ -143,6 +164,14 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     BottomSheetDialog shareDialog;
 
+    WebView mWebView;
+
+    private String goodId;
+
+    private UserInfo userInfo;
+
+    private ProgressDialog progressDialog = null;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_good_detail;
@@ -156,11 +185,39 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     }
 
     public void initViews() {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("加载中");
+
+        if (!StringUtils.isEmpty(SPUtils.getInstance().getString(Constants.USER_INFO))) {
+            Logger.i(SPUtils.getInstance().getString(Constants.USER_INFO));
+            userInfo = JSON.parseObject(SPUtils.getInstance().getString(Constants.USER_INFO), new TypeReference<UserInfo>() {
+            });
+        }
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getString("good_id") != null) {
+            goodId = bundle.getString("good_id");
+        }
+
         initGoodParams();
 
         recGoodInfoAdapter = new GoodInfoAdapter(this, null);
         mRecListView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecListView.setAdapter(recGoodInfoAdapter);
+
+        recGoodInfoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
+
+                String recGoodId = recGoodInfoAdapter.getData().get(position).getId();
+                goodDetailInfoPresenterImp.getGoodDetailInfoByParams(userInfo != null ? userInfo.getUserId() : "", recGoodId);
+            }
+        });
 
         goodDetailInfoPresenterImp = new GoodDetailInfoPresenterImp(this, this);
         addCollectInfoPresenterImp = new AddCollectInfoPresenterImp(this, this);
@@ -184,7 +241,7 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         });
 
         Logger.i("width--->" + ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() / 6);
-        goodDetailInfoPresenterImp.getGoodDetailInfoByParams("1", "1");
+        goodDetailInfoPresenterImp.getGoodDetailInfoByParams(userInfo != null ? userInfo.getUserId() : "", goodId);
 
         initShareDialog();
 
@@ -192,8 +249,8 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
             UMImage image = new UMImage(this, R.drawable.share_logo);//资源文件
             shareAction = new ShareAction(this);
 
-            UMWeb web = new UMWeb("https://www.baidu.com");
-            web.setTitle("分享的标题");//标题
+            UMWeb web = new UMWeb("http://m.8688g.com/u/5305.html");
+            web.setTitle("全球比价");//标题
             web.setThumb(image);  //缩略图
             web.setDescription(getResources().getString(R.string.share_content));//描述
 
@@ -278,19 +335,20 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
 
     @OnClick(R.id.layout_follow)
     void follow() {
-        addCollectInfoPresenterImp.doCollect("1", "1");
+        addCollectInfoPresenterImp.doCollect(userInfo != null ? userInfo.getUserId() : "", goodId);
     }
 
     @OnClick(R.id.tv_all_comment)
     void allComment() {
         Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra("gid", "gid");
+        intent.putExtra("good_id", goodId);
         startActivity(intent);
     }
 
     @OnClick(R.id.tv_other_country)
     void otherCountry() {
         Intent intent = new Intent(this, OtherPriceActivity.class);
+        intent.putExtra("good_id", goodId);
         startActivity(intent);
     }
 
@@ -310,8 +368,14 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         lineChart.setData(datas);
         lineChart.setXLineData(xDatas);
 
+        int tempXSpaceNum = 1;
+        if (xDatas != null && xDatas.size() > 0) {
+            tempXSpaceNum = xDatas.size() - 1;
+            tempXSpaceNum = tempXSpaceNum <= 0 ? 1 : tempXSpaceNum;
+        }
+
         lineChart.setRulerYSpace(ySpace);
-        lineChart.setStepSpace((int) ((ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() - 36) / 6));
+        lineChart.setStepSpace((int) ((ScreenUtils.getScreenWidth() / ScreenUtils.getScreenDensity() - 80) / tempXSpaceNum));
         lineChart.setShowTable(true);
     }
 
@@ -330,7 +394,14 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
         Logger.i(JSONObject.toJSONString(tData));
         if (tData != null && tData.getCode() == Constants.SUCCESS) {
 
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
             if (tData instanceof GoodDetailInfoRet) {
+                scrollView.fling(0);
+                scrollView.smoothScrollTo(0, 0);
+
                 mIsFollowGood.setImageResource(((GoodDetailInfoRet) tData).getData().getIsCollect() == 0 ? R.mipmap.follow_good_normal : R.mipmap.follow_good_selected);
                 mIsFollowTextView.setText(((GoodDetailInfoRet) tData).getData().getIsCollect() == 0 ? R.string.is_not_follow : R.string.is_follow);
 
@@ -343,17 +414,36 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
                         initBanner(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsImages());
                     }
 
-                    if (!StringUtils.isEmpty(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent())) {
-                        String[] tempImgs = ((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent().split(";");
+                    if (((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue() != null && ((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue().size() > 0) {
+                        paramsAdapter.setNewData(((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue());
+                    }
+
+
+                    if (!StringUtils.isEmpty(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContentImgs())) {
+                        mGoodImageListView.setVisibility(View.VISIBLE);
+                        mGoodDetailView.setVisibility(View.GONE);
+                        String[] tempImgs = ((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContentImgs().split(";");
                         List<ImageInfo> list = new ArrayList<>();
                         for (int i = 0; i < tempImgs.length; i++) {
                             list.add(new ImageInfo(i + "", tempImgs[i]));
                         }
                         imageInfoAdapter.setNewData(list);
-                    }
+                    } else {
+                        mGoodImageListView.setVisibility(View.GONE);
+                        mGoodDetailView.setVisibility(View.VISIBLE);
 
-                    if (((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue() != null && ((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue().size() > 0) {
-                        paramsAdapter.setNewData(((GoodDetailInfoRet) tData).getData().getInfo().getAttrValue());
+                        mWebView = new WebView(GoodDetailActivity.this);
+                        WebSettings webSettings = mWebView.getSettings();//获取webview设置属性
+                        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//把html中的内容放大webview等宽的一列中
+                        webSettings.setJavaScriptEnabled(true);//支持js
+                        webSettings.setBuiltInZoomControls(true); // 显示放大缩小
+                        webSettings.setSupportZoom(true); // 可以缩放
+
+                        Logger.i("content--->" + ((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent());
+                        //mWebView.loadData(Html.fromHtml(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent()).toString(), "text/html; charset=UTF-8", null);
+                        String content = Html.fromHtml(((GoodDetailInfoRet) tData).getData().getInfo().getGoodsContent()).toString();
+                        mWebView.loadDataWithBaseURL(null, getNewContent(content), "text/html", "utf-8", null);
+                        mGoodDetailView.addView(mWebView);
                     }
                 }
 
@@ -361,8 +451,8 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
                     mMinPriceTextView.setText(((GoodDetailInfoRet) tData).getData().getPrices().getMin() + "");
                     double max = ((GoodDetailInfoRet) tData).getData().getPrices().getMax();
                     double min = ((GoodDetailInfoRet) tData).getData().getPrices().getMin();
-                    int ySpace = (int) ((max - min) / 6);
-                    initLineView(((GoodDetailInfoRet) tData).getData().getPrices().getList(), ySpace == 0 ? 50 : ySpace);
+                    int ySpace = (int) ((max - min) / 5);
+                    initLineView(((GoodDetailInfoRet) tData).getData().getPrices().getList(), ySpace == 0 ? 60 : ySpace);
                 }
 
                 if (((GoodDetailInfoRet) tData).getData().getComments() != null) {
@@ -387,6 +477,7 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
                 } else {
                     ToastUtils.showLong("已关注");
                 }
+                mIsFollowGood.setImageResource(((AddCollectInfoRet) tData).getData().getIsCollect() == 0 ? R.mipmap.follow_good_normal : R.mipmap.follow_good_selected);
             }
         }
     }
@@ -394,6 +485,19 @@ public class GoodDetailActivity extends BaseFragmentActivity implements GoodDeta
     @Override
     public void loadDataError(Throwable throwable) {
 
+    }
+
+    public static String getNewContent(String htmltext) {
+        try {
+            Document doc = Jsoup.parse(htmltext);
+            Elements elements = doc.getElementsByTag("img");
+            for (Element element : elements) {
+                element.attr("width", "100%").attr("height", "auto");
+            }
+            return doc.toString();
+        } catch (Exception e) {
+            return htmltext;
+        }
     }
 
     private UMShareListener shareListener = new UMShareListener() {

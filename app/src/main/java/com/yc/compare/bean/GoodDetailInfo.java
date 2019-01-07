@@ -76,6 +76,9 @@ public class GoodDetailInfo {
         @SerializedName("goods_content")
         private String goodsContent;
 
+        @SerializedName("goods_content_imgs")
+        private String goodsContentImgs;
+
         @SerializedName("goods_images")
         private String[] goodsImages;
 
@@ -120,6 +123,14 @@ public class GoodDetailInfo {
 
         public void setGoodsContent(String goodsContent) {
             this.goodsContent = goodsContent;
+        }
+
+        public String getGoodsContentImgs() {
+            return goodsContentImgs;
+        }
+
+        public void setGoodsContentImgs(String goodsContentImgs) {
+            this.goodsContentImgs = goodsContentImgs;
         }
 
         public String[] getGoodsImages() {
@@ -192,7 +203,7 @@ public class GoodDetailInfo {
         }
     }
 
-    public class AttrItem{
+    public class AttrItem {
         private String name;
         private String value;
 

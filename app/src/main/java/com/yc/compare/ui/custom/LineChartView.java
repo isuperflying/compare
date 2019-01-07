@@ -27,8 +27,8 @@ public class LineChartView extends View {
 
     private Paint linePaint;//曲线画笔
     private Paint pointPaint;//曲线上锚点画笔
-    private Paint tablePaint;//表格画笔
-    private Paint textRulerPaint;//标尺文本画笔
+    private Paint tablePaint;//
+    private Paint textRulerPaint;//标尺文本画笔表格画笔
     private Paint textPointPaint;//曲线上锚点文本画笔
 
     private Path linePath;//曲线路径
@@ -256,7 +256,7 @@ public class LineChartView extends View {
         float fontTotalHeight = fontMetrics.bottom - fontMetrics.top;
         float offsetY = fontTotalHeight / 2 - fontMetrics.bottom;
         float newY = y + offsetY + rulerValuePadding;
-        drawText(canvas, textRulerPaint, text, x, newY);
+        drawText(canvas, textRulerPaint, text, x - 5, newY);
     }
 
     /**
@@ -483,7 +483,7 @@ public class LineChartView extends View {
         refreshLayout();
     }
 
-    public void setXLineData(List<String> xdata){
+    public void setXLineData(List<String> xdata) {
         if (xdata == null) {
             throw new RuntimeException("dataList cannot is null!");
         }

@@ -19,7 +19,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -33,6 +36,7 @@ import com.yc.compare.bean.CollectInfoRet;
 import com.yc.compare.bean.CollectType;
 import com.yc.compare.bean.CollectTypeRet;
 import com.yc.compare.bean.ResultInfo;
+import com.yc.compare.bean.UserInfo;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.CollectInfoPresenterImp;
 import com.yc.compare.presenter.CollectTypePresenterImp;
@@ -81,6 +85,9 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
     @BindView(R.id.btn_delete)
     Button mDeleteButton;
 
+    @BindView(R.id.layout_no_data)
+    LinearLayout mNoDataLayout;
+
     private CollectAdapter collectAdapter;
 
     private CollectInfoPresenterImp collectInfoPresenterImp;
@@ -107,6 +114,8 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
 
     private String queryType = "";
 
+    private UserInfo userInfo;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_collect;
@@ -119,6 +128,12 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
     }
 
     public void initViews() {
+
+        if (!StringUtils.isEmpty(SPUtils.getInstance().getString(Constants.USER_INFO))) {
+            Logger.i(SPUtils.getInstance().getString(Constants.USER_INFO));
+            userInfo = JSON.parseObject(SPUtils.getInstance().getString(Constants.USER_INFO), new TypeReference<UserInfo>() {
+            });
+        }
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("正在删除");
 
@@ -134,7 +149,7 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
             @Override
             public void onLoadMoreRequested() {
                 currentPage++;
-                collectInfoPresenterImp.getCollectInfoList("1", typeList.get(0).getCategoryId(), currentPage);
+                collectInfoPresenterImp.getCollectInfoList(userInfo != null ? userInfo.getUserId() : "", typeList.get(0).getCategoryId(), currentPage);
             }
         }, mCollectListView);
 
@@ -147,7 +162,7 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
         });
 
         avi.show();
-        collectTypePresenterImp.collectType("1");
+        collectTypePresenterImp.collectType(userInfo != null ? userInfo.getUserId() : "");
     }
 
     public void initPopWindow() {
@@ -199,7 +214,7 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
                     lastType = position;
                     currentPage = 1;
                     queryType = collectTypeAdapter.getData().get(position).getCategoryId();
-                    collectInfoPresenterImp.getCollectInfoList("1",queryType , currentPage);
+                    collectInfoPresenterImp.getCollectInfoList(userInfo != null ? userInfo.getUserId() : "", queryType, currentPage);
                     if (customPopWindow != null && customPopWindow.getPopupWindow().isShowing()) {
                         customPopWindow.dissmiss();
                     }
@@ -310,17 +325,23 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
                         collectAdapter.setNewData(((CollectInfoRet) tData).getData());
                     } else {
                         collectAdapter.addData(((CollectInfoRet) tData).getData());
-                        if (((CollectInfoRet) tData).getData().size() == pageSize) {
-                            collectAdapter.loadMoreComplete();
-                        } else {
-                            collectAdapter.loadMoreEnd();
-                        }
+                    }
+                    if (((CollectInfoRet) tData).getData().size() == pageSize) {
+                        collectAdapter.loadMoreComplete();
+                    } else {
+                        collectAdapter.loadMoreEnd();
                     }
                 } else {
-                    ToastUtils.showLong("删除成功");
-                    currentPage = 1;
-                    collectInfoPresenterImp.getCollectInfoList("1",queryType , currentPage);
-                    changeEdit();
+                    if (isEdit) {
+                        ToastUtils.showLong("删除成功");
+                        currentPage = 1;
+                        collectInfoPresenterImp.getCollectInfoList(userInfo != null ? userInfo.getUserId() : "", queryType, currentPage);
+                        changeEdit();
+                    } else {
+                        mNoDataLayout.setVisibility(View.VISIBLE);
+                        mFilterImageView.setVisibility(View.INVISIBLE);
+                        mEditTextView.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -328,7 +349,7 @@ public class CollectActivity extends BaseFragmentActivity implements CollectInfo
                 if (((CollectTypeRet) tData).getData().getOptData() != null) {
                     typeList = ((CollectTypeRet) tData).getData().getOptData();
                     initPopWindow();
-                    collectInfoPresenterImp.getCollectInfoList("1", typeList.get(0).getCategoryId(), currentPage);
+                    collectInfoPresenterImp.getCollectInfoList(userInfo != null ? userInfo.getUserId() : "", typeList.get(0).getCategoryId(), currentPage);
                 }
             }
         } else {

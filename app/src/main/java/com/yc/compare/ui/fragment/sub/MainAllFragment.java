@@ -1,6 +1,7 @@
 package com.yc.compare.ui.fragment.sub;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import com.yc.compare.R;
 import com.yc.compare.bean.GoodInfoRet;
 import com.yc.compare.presenter.GoodInfoPresenterImp;
+import com.yc.compare.ui.GoodDetailActivity;
 import com.yc.compare.ui.adapter.GoodInfoAdapter;
 import com.yc.compare.ui.base.BaseFragment;
 import com.yc.compare.ui.custom.GridSpacingItemDecoration;
@@ -92,6 +94,14 @@ public class MainAllFragment extends BaseFragment implements GoodInfoView {
                 goodInfoPresenterImp.getGoodInfoByType(currentPage, categoryId);
             }
         }, mHotRecyclerView);
+        goodInfoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+                intent.putExtra("good_id", goodInfoAdapter.getData().get(position).getId());
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -124,11 +134,11 @@ public class MainAllFragment extends BaseFragment implements GoodInfoView {
                 goodInfoAdapter.setNewData(tData.getData().getGoodsList());
             } else {
                 goodInfoAdapter.addData(tData.getData().getGoodsList());
-                if (tData.getData().getGoodsList().size() == pageSize) {
-                    goodInfoAdapter.loadMoreComplete();
-                } else {
-                    goodInfoAdapter.loadMoreEnd();
-                }
+            }
+            if (tData.getData().getGoodsList().size() == pageSize) {
+                goodInfoAdapter.loadMoreComplete();
+            } else {
+                goodInfoAdapter.loadMoreEnd();
             }
         } catch (NullPointerException e) {
             goodInfoAdapter.loadMoreEnd();

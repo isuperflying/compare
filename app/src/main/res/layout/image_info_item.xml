@@ -9,7 +9,7 @@
         android:id="@+id/iv_good_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerInside"
         android:padding="6dp"
+        android:scaleType="centerInside"
         android:src="@drawable/logo" />
 </LinearLayout>

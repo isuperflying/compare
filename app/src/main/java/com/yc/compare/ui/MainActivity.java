@@ -49,6 +49,8 @@ public class MainActivity extends BaseFragmentActivity {
 
     private MyFragmentAdapter adapter;
 
+    private long clickTime = 0;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_main;
@@ -59,6 +61,7 @@ public class MainActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         initViews();
         MainActivityPermissionsDispatcher.showRecordWithCheck(this);
+        MainActivityPermissionsDispatcher.readPhoneStateWithCheck(this);
     }
 
     @Override
@@ -85,6 +88,26 @@ public class MainActivity extends BaseFragmentActivity {
     @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void onCameraNeverAskAgain() {
         Toast.makeText(this, R.string.permission_storage_never_ask_again, Toast.LENGTH_SHORT).show();
+    }
+
+    @NeedsPermission(Manifest.permission.READ_PHONE_STATE)
+    void readPhoneState() {
+        //ToastUtils.showLong("允许使用存储权限");
+    }
+
+    @OnPermissionDenied(Manifest.permission.READ_PHONE_STATE)
+    void onReadPhoneStateDenied() {
+        Toast.makeText(this, R.string.permission_readphone_denied, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnShowRationale(Manifest.permission.READ_PHONE_STATE)
+    void showRationaleForPhoneState(PermissionRequest request) {
+        showRationaleDialog(R.string.permission_readphone_rationale, request);
+    }
+
+    @OnNeverAskAgain(Manifest.permission.READ_PHONE_STATE)
+    void onReadPhoneStateNeverAskAgain() {
+        Toast.makeText(this, R.string.permission_readphone_never_ask_again, Toast.LENGTH_SHORT).show();
     }
 
     public void initViews() {
@@ -135,4 +158,20 @@ public class MainActivity extends BaseFragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
+    private void exit() {
+        if ((System.currentTimeMillis() - clickTime) > 2000) {
+            clickTime = System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        } else {
+            System.exit(0);
+        }
+    }
+
 }

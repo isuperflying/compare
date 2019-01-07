@@ -6,13 +6,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.yc.compare.ui.fragment.GoodTypeFragment;
-import com.yc.compare.ui.fragment.HomeFragment;
+import com.yc.compare.ui.fragment.Home2Fragment;
 import com.yc.compare.ui.fragment.MyFragment;
 import com.yc.compare.ui.fragment.NewsFragment;
 
 public class MyFragmentAdapter extends FragmentPagerAdapter {
 
-    private final Fragment[] FRAGMENTS = new Fragment[]{new HomeFragment(), new GoodTypeFragment(), new NewsFragment(), new MyFragment()};
+    private final Fragment[] FRAGMENTS = new Fragment[]{new Home2Fragment(), new GoodTypeFragment(), new NewsFragment(), new MyFragment()};
 
     public MyFragmentAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

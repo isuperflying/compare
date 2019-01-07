@@ -146,7 +146,7 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
 
     private CustomPopWindow customPopWindow;
 
-    private int pageSize = 12;
+    private int pageSize = 20;
 
     private int currentPage = 1;
 
@@ -239,6 +239,7 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(GoodListActivity.this, GoodDetailActivity.class);
+                intent.putExtra("good_id", goodInfoAdapter.getData().get(position).getId());
                 startActivity(intent);
             }
         });
@@ -252,12 +253,15 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
             }
         }, mGoodListView);
 
+        //初始化品牌弹窗
+        initPopWindow();
+
         //查询城市列表
         //categoryWrapperPresenterImp.getCategoryWrapperList(2, "-2", "2");
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (App.isShowBrand) {
             mBrandLayout.setVisibility(View.VISIBLE);
@@ -386,8 +390,6 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
 
                 if (brandList == null && goodInfoRet.getData().getBrandList() != null && goodInfoRet.getData().getBrandList().size() > 0) {
                     brandList = goodInfoRet.getData().getBrandList();
-                    //初始化品牌弹窗
-                    initPopWindow();
                 }
 
                 if (goodInfoRet.getData().getHotCountry() != null && goodInfoRet.getData().getHotCountry().size() > 0) {
@@ -405,11 +407,12 @@ public class GoodListActivity extends BaseFragmentActivity implements GoodInfoVi
 
             } else {
                 goodInfoAdapter.addData(goodInfoRet.getData().getGoodsList());
-                if (goodInfoRet.getData().getGoodsList().size() == pageSize) {
-                    goodInfoAdapter.loadMoreComplete();
-                } else {
-                    goodInfoAdapter.loadMoreEnd();
-                }
+            }
+
+            if (goodInfoRet.getData().getGoodsList().size() == pageSize) {
+                goodInfoAdapter.loadMoreComplete();
+            } else {
+                goodInfoAdapter.loadMoreEnd();
             }
         } catch (NullPointerException e) {
             goodInfoAdapter.loadMoreEnd();

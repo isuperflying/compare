@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.StringUtils;
-
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 
@@ -97,6 +96,7 @@ public class CommentDialog extends DialogFragment implements MyEditText.BackList
         mSendTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (StringUtils.isEmpty(mInputEditText.getText().toString())) {
                     Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_LONG).show();
                     return;

@@ -5,16 +5,18 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
-import com.yc.compare.bean.ResultInfo;
 import com.yc.compare.bean.UpdateInfoRet;
+import com.yc.compare.bean.UserInfo;
 import com.yc.compare.common.Constants;
-import com.yc.compare.presenter.SuggestInfoPresenterImp;
 import com.yc.compare.presenter.UpdateInfoPresenterImp;
 import com.yc.compare.ui.base.BaseFragmentActivity;
-import com.yc.compare.view.SuggestInfoView;
 import com.yc.compare.view.UpdateInfoView;
 
 import butterknife.BindView;
@@ -35,6 +37,8 @@ public class SuggestActivity extends BaseFragmentActivity implements UpdateInfoV
 
     private ProgressDialog progressDialog = null;
 
+    private UserInfo userInfo;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_suggest;
@@ -47,6 +51,12 @@ public class SuggestActivity extends BaseFragmentActivity implements UpdateInfoV
     }
 
     public void initViews() {
+        if (!StringUtils.isEmpty(SPUtils.getInstance().getString(Constants.USER_INFO))) {
+            Logger.i(SPUtils.getInstance().getString(Constants.USER_INFO));
+            userInfo = JSON.parseObject(SPUtils.getInstance().getString(Constants.USER_INFO), new TypeReference<UserInfo>() {
+            });
+        }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("正在提交");
         updateInfoPresenterImp = new UpdateInfoPresenterImp(this, this);
@@ -61,7 +71,7 @@ public class SuggestActivity extends BaseFragmentActivity implements UpdateInfoV
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
         }
-        updateInfoPresenterImp.addSuggest("1", mSuggestContent.getText().toString());
+        updateInfoPresenterImp.addSuggest(userInfo != null ? userInfo.getUserId() : "", mSuggestContent.getText().toString());
     }
 
     @OnClick(R.id.iv_back)

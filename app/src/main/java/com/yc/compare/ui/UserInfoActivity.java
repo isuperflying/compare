@@ -1,22 +1,31 @@
 package com.yc.compare.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.blankj.utilcode.util.PathUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -25,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.UpdateInfoRet;
+import com.yc.compare.bean.UserInfo;
 import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.UpdateInfoPresenterImp;
 import com.yc.compare.ui.base.BaseFragmentActivity;
@@ -39,10 +49,17 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by myflying on 2018/12/3.
  */
+@RuntimePermissions
 public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfoView, View.OnClickListener {
 
     private static final int TAKE_BIG_PICTURE = 1000;
@@ -71,6 +88,8 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
 
     private String resultNickName;
 
+    private UserInfo userInfo;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_user_info;
@@ -98,12 +117,73 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
         progressDialog.setMessage("正在修改");
 
         updateInfoPresenterImp = new UpdateInfoPresenterImp(this, this);
+
+
+        if (!StringUtils.isEmpty(SPUtils.getInstance().getString(Constants.USER_INFO))) {
+            Logger.i(SPUtils.getInstance().getString(Constants.USER_INFO));
+            userInfo = JSON.parseObject(SPUtils.getInstance().getString(Constants.USER_INFO), new TypeReference<UserInfo>() {
+            });
+            if (userInfo != null) {
+                RequestOptions myOptions = new RequestOptions()
+                        .transform(new GlideRoundTransform(this, 35));
+                Glide.with(this).load(userInfo.getHeadImage()).apply(myOptions).into(mUserHeadImageView);
+                mNickNameTextView.setText(userInfo.getNickName());
+            }
+        }
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        UserInfoActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void showCamera() {
+        //ToastUtils.showLong("允许使用存储权限");
+        if(bottomSheetDialog != null && !bottomSheetDialog.isShowing()){
+            bottomSheetDialog.show();
+        }
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    void onCameraDenied() {
+        Toast.makeText(this, R.string.permission_camera_denied, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    void showRationaleForCamera(PermissionRequest request) {
+        showRationaleDialog(R.string.permission_camera_rationale, request);
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    void onCameraNeverAskAgain() {
+        Toast.makeText(this, R.string.permission_camera_never_ask_again, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showRationaleDialog(@StringRes int messageResId, final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .setCancelable(false)
+                .setMessage(messageResId)
+                .show();
+    }
 
     @OnClick(R.id.layout_photo)
     public void showPhotoSelect() {
-        bottomSheetDialog.show();
+        UserInfoActivityPermissionsDispatcher.showCameraWithCheck(this);
     }
 
     @OnClick(R.id.layout_nickname)
@@ -119,7 +199,7 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
                 if (progressDialog != null && !progressDialog.isShowing()) {
                     progressDialog.show();
                 }
-                updateInfoPresenterImp.updateNickName("1", nickName);
+                updateInfoPresenterImp.updateNickName(userInfo != null ? userInfo.getUserId() : "", nickName);
             }
 
             @Override
@@ -163,6 +243,17 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
             ToastUtils.showLong("修改成功");
             if (!StringUtils.isEmpty(resultNickName)) {
                 mNickNameTextView.setText(resultNickName);
+                if (userInfo != null) {
+                    userInfo.setNickName(resultNickName);
+                    SPUtils.getInstance().put(Constants.USER_INFO, JSONObject.toJSONString(userInfo));
+                }
+            }
+
+            if (tData.getData() != null && tData.getData().size() > 0) {
+                if (userInfo != null) {
+                    userInfo.setHeadImage(tData.getData().get(0).getPic());
+                    SPUtils.getInstance().put(Constants.USER_INFO, JSONObject.toJSONString(userInfo));
+                }
             }
         } else {
             ToastUtils.showLong("修改失败");
@@ -259,7 +350,7 @@ public class UserInfoActivity extends BaseFragmentActivity implements UpdateInfo
                         bottomSheetDialog.dismiss();
                     }
                     resultNickName = "";
-                    updateInfoPresenterImp.updateHead("1", outputImage);
+                    updateInfoPresenterImp.updateHead(userInfo != null ? userInfo.getUserId() : "", outputImage);
                     break;
             }
         }

@@ -1,13 +1,11 @@
 package com.yc.compare.view;
 
 import com.yc.compare.base.IBaseView;
-import com.yc.compare.bean.HomeDataInfoRet;
-
-import java.util.List;
+import com.yc.compare.bean.ResultInfo;
 
 /**
  * Created by iflying on 2018/1/9.
  */
 
-public interface HomeDataView  extends IBaseView<HomeDataInfoRet> {
+public interface HomeDataView  extends IBaseView<ResultInfo> {
 }

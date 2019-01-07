@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,8 +16,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.widget.DefaultItemDecoration;
 import com.yanzhenjie.recyclerview.swipe.widget.StickyNestedScrollView;
@@ -37,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by iflying on 2017/12/14.
@@ -59,6 +64,9 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
     @BindView(R.id.search_layout)
     LinearLayout mSearchLayout;
 
+    @BindView(R.id.et_key_word)
+    EditText mKeyWordEditText;
+
     CategoryLeftAdapter categoryLeftAdapter;
 
     CategoryContentAdapter categoryContentAdapter;
@@ -71,6 +79,8 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
 
     private int categoryType = 1;
 
+    private GroupAdapter gAdapter;
+
     @Override
     protected View onCreateView() {
         View root = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_good_type, null);
@@ -78,11 +88,6 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
         initViews();
         return root;
     }
-
-//    @Override
-//    protected boolean translucentFull() {
-//        return true;
-//    }
 
     public void initViews() {
 
@@ -123,18 +128,48 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), GoodListActivity.class);
-                intent.putExtra("cid",categoryContentAdapter.getData().get(position).getId());
+                intent.putExtra("cid", categoryContentAdapter.getData().get(position).getId());
                 startActivity(intent);
             }
         });
 
         categoryWrapperPresenterImp.getCategoryInfoList(level, "");
+
+        mTypeContentListView.setNestedScrollingEnabled(false);
+        mTypeContentListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTypeContentListView.addItemDecoration(new DefaultItemDecoration(ContextCompat.getColor(getActivity(), R.color.line_color)));
+        mTypeContentListView.setSwipeItemClickListener(new SwipeItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+
+                if (gAdapter != null && !gAdapter.getmListItems().get(position).id.equals("-1")) {
+                    Logger.i("country info--->" + gAdapter.getmListItems().get(position).id + "---" + gAdapter.getmListItems().get(position).cname);
+                    String queryCountryId = gAdapter.getmListItems().get(position).id;
+                    Intent intent = new Intent(getActivity(),GoodListActivity.class);
+                    intent.putExtra("country_id",queryCountryId);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         App.isShowBrand = true;
+    }
+
+    @OnClick(R.id.et_key_word)
+    void search() {
+        if (StringUtils.isEmpty(mKeyWordEditText.getText())) {
+            ToastUtils.showLong("请输入关键词搜索");
+            return;
+        }
+
+        Intent intent = new Intent(getActivity(), GoodListActivity.class);
+        intent.putExtra("key_word", mKeyWordEditText.getText().toString());
+        startActivity(intent);
     }
 
     public void getNextCategoryList(int pos) {
@@ -173,11 +208,8 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
             if (categoryType == 2) {
                 scrollView.setVisibility(View.VISIBLE);
                 mCommonTypeListView.setVisibility(View.GONE);
-                mTypeContentListView.setNestedScrollingEnabled(false);
-                mTypeContentListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                mTypeContentListView.addItemDecoration(new DefaultItemDecoration(ContextCompat.getColor(getActivity(), R.color.line_color)));
 
-                GroupAdapter gAdapter = new GroupAdapter();
+                gAdapter = new GroupAdapter();
                 mTypeContentListView.setAdapter(gAdapter);
                 gAdapter.setListItems(tData.getData().getAllCountry());
             } else {
@@ -225,18 +257,22 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
             return mListItems.size();
         }
 
+        public List<ListItem> getmListItems() {
+            return mListItems;
+        }
+
         void setListItems(List<CountryWrapper> wrappers) {
             mListItems.clear();
 
             for (int i = 0; i < wrappers.size(); i++) {
                 CountryWrapper countryWrapper = wrappers.get(i);
                 for (int j = 0; j < countryWrapper.getList().size(); j++) {
-                    mListItems.add(new ListItem(countryWrapper.getList().get(j).getCountryName()));
+                    mListItems.add(new ListItem(countryWrapper.getList().get(j).getId(), countryWrapper.getList().get(j).getCountryName()));
                 }
             }
 
             //在特定位置增加分组索引
-            StickyListItem firstSticky = new StickyListItem(wrappers.get(0).getName());
+            StickyListItem firstSticky = new StickyListItem("-1", wrappers.get(0).getName());
             mListItems.add(0, firstSticky);
 
             int tempIndex = 0;
@@ -244,7 +280,7 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
                 CountryWrapper countryWrapper = wrappers.get(m);
                 tempIndex += wrappers.get(m - 1).getList().size() + 1;
                 Logger.i("temp index--->" + tempIndex);
-                StickyListItem stickyListItem = new StickyListItem(countryWrapper.getName());
+                StickyListItem stickyListItem = new StickyListItem("-1", countryWrapper.getName());
                 mListItems.add(tempIndex, stickyListItem);
             }
 
@@ -267,18 +303,19 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
     }
 
     private static class ListItem {
-
+        private String id;
         private String cname;
 
-        ListItem(String name) {
+        ListItem(String id, String name) {
+            this.id = id;
             this.cname = name;
         }
     }
 
     private static class StickyListItem extends ListItem {
 
-        StickyListItem(String text) {
-            super(text);
+        StickyListItem(String id, String text) {
+            super(id, text);
         }
     }
 
