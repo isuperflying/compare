@@ -3,6 +3,8 @@ package com.yc.compare.ui.fragment;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.BannerInfo;
@@ -26,7 +32,11 @@ import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.GoodInfoPresenterImp;
 import com.yc.compare.presenter.HomeDataPresenterImp;
 import com.yc.compare.ui.GoodDetailActivity;
+import com.yc.compare.ui.GoodListActivity;
+import com.yc.compare.ui.HotBrandActivity;
+import com.yc.compare.ui.HotCountryActivity;
 import com.yc.compare.ui.NewsDetailActivity;
+import com.yc.compare.ui.SearchActivity;
 import com.yc.compare.ui.adapter.GoodInfoAdapter;
 import com.yc.compare.ui.adapter.SubFragmentAdapter;
 import com.yc.compare.ui.base.BaseFragment;
@@ -47,14 +57,15 @@ import butterknife.ButterKnife;
  * Created by iflying on 2017/12/14.
  */
 
-public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarLayout.OnOffsetChangedListener {
+public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarLayout.OnOffsetChangedListener,View.OnClickListener {
 
-    @BindView(R.id.layout_appbar)
-    AppBarLayout appBarLayout;
+    @BindView(R.id.scroll_view)
+    NestedScrollView scrollView;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.search_wrapper)
+    LinearLayout mSearchWrapperLayout;
 
+    @BindView(R.id.search_layout)
     LinearLayout mSearchLayout;
 
     @BindView(R.id.home_list)
@@ -98,6 +109,12 @@ public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarL
 
     private GoodInfoPresenterImp goodInfoPresenterImp;
 
+    private int pageSize = 20;
+
+    private int currentPage = 1;
+
+    private String categoryId;
+
     @Override
     protected View onCreateView() {
         View root = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home2, null);
@@ -109,7 +126,6 @@ public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarL
 
     public void initTop() {
         View topView = LayoutInflater.from(getActivity()).inflate(R.layout.home_top, null);
-        mSearchLayout = topView.findViewById(R.id.search_layout);
         mBanner = topView.findViewById(R.id.banner);
         mBrandLayout = topView.findViewById(R.id.layout_brand);
         mCountryLayout = topView.findViewById(R.id.layout_country);
@@ -119,37 +135,59 @@ public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarL
         mRec2ImageView = topView.findViewById(R.id.iv_rec2);
         mRec3ImageView = topView.findViewById(R.id.iv_rec3);
 
+        mBrandLayout.setOnClickListener(this);
+        mCountryLayout.setOnClickListener(this);
+        mSaleLayout.setOnClickListener(this);
+        mNewsTextView.setOnClickListener(this);
+        mRec1ImageView.setOnClickListener(this);
+        mRec2ImageView.setOnClickListener(this);
+        mRec3ImageView.setOnClickListener(this);
+        mSearchWrapperLayout.setOnClickListener(this);
+
         goodInfoAdapter = new GoodInfoAdapter(getActivity(), null);
         mHomeDataListView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-
         goodInfoAdapter.setHeaderView(topView);
         mHomeDataListView.setAdapter(goodInfoAdapter);
+        mHomeDataListView.setNestedScrollingEnabled(false);
+
+//        goodInfoAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+//            @Override
+//            public void onLoadMoreRequested() {
+//                currentPage++;
+//                goodInfoPresenterImp.getGoodInfoByType(currentPage, categoryId);
+//            }
+//        }, mHomeDataListView);
+        goodInfoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+                intent.putExtra("good_id", goodInfoAdapter.getData().get(position).getId());
+                startActivity(intent);
+            }
+        });
     }
 
     public void initViews() {
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                //LogUtil.msg("TAG  " + verticalOffset + "--" + appBarLayout.getHeight() + " --" + collapsingToolbarLayout.getHeight());
-                Logger.i("bar height --->" + appBarLayout.getHeight() + "---verticalOffset--->" + verticalOffset);
-                if (-verticalOffset >= appBarLayout.getHeight() - SizeUtils.dp2px(130)) {
-                    toolbar.setVisibility(View.VISIBLE);
-                    mSearchLayout.setVisibility(View.INVISIBLE);
+            public void onScrollChange(NestedScrollView nestedScrollView, int i, int y, int i2, int i3) {
+                int tempY = SizeUtils.px2dp(y);
+                if (tempY > 487) {
+                    mSearchWrapperLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 } else {
-                    mSearchLayout.setVisibility(View.VISIBLE);
-                    toolbar.setVisibility(View.INVISIBLE);
+                    mSearchWrapperLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
                 }
             }
         });
 
+        //mHomeDataListView.addItemDecoration(new GridSpacingItemDecoration(2, SizeUtils.dp2px(5), true));
+        LinearLayout.LayoutParams searchParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(36));
+        searchParams.setMargins(SizeUtils.dp2px(15), BarUtils.getStatusBarHeight(), SizeUtils.dp2px(15), 0);
+        mSearchLayout.setLayoutParams(searchParams);
+
+        homeDataPresenterImp = new HomeDataPresenterImp(this, getActivity());
         goodInfoPresenterImp = new GoodInfoPresenterImp(this, getActivity());
 
-        mHomeDataListView.addItemDecoration(new GridSpacingItemDecoration(2, SizeUtils.dp2px(5), true));
-
-        LinearLayout.LayoutParams search = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(36));
-        search.setMargins(SizeUtils.dp2px(15), BarUtils.getStatusBarHeight(), SizeUtils.dp2px(15), 0);
-        mSearchLayout.setLayoutParams(search);
-        homeDataPresenterImp = new HomeDataPresenterImp(this, getActivity());
         homeDataPresenterImp.initData();
     }
 
@@ -203,102 +241,96 @@ public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarL
         });
     }
 
-//    @OnClick(R.id.layout_sale)
-//    void salePage() {
-//        Intent intent = new Intent(getActivity(), GoodListActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    @OnClick(R.id.layout_country)
-//    void countryPage() {
-//        Intent intent = new Intent(getActivity(), HotCountryActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    @OnClick(R.id.layout_brand)
-//    void brandPage() {
-//        Intent intent = new Intent(getActivity(), HotBrandActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    @OnClick(R.id.tv_hot_news)
-//    void newsDetail() {
-//        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-//        intent.putExtra("nid", StringUtils.isEmpty(newsId) ? "" : newsId);
-//        startActivity(intent);
-//    }
-//
-//
-//    void toSearch() {
-//        Intent intent = new Intent(getActivity(), SearchActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    @OnClick(R.id.iv_rec1)
-//    void hotLfGoodDetail() {
-//        if (StringUtils.isEmpty(hotLfGoodId)) {
-//            return;
-//        }
-//
-//        if (specialLfJumpType == 0) {
-//            return;
-//        }
-//
-//        if (specialLfJumpType == 1) {
-//            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
-//            intent.putExtra("good_id", hotLfGoodId);
-//            startActivity(intent);
-//        }
-//        if (specialLfJumpType == 2) {
-//            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-//            intent.putExtra("nid", StringUtils.isEmpty(hotLfGoodId) ? "" : hotLfGoodId);
-//            startActivity(intent);
-//        }
-//    }
-//
-//    @OnClick(R.id.iv_rec2)
-//    void hotRtGoodDetail() {
-//        if (StringUtils.isEmpty(hotRtGoodId)) {
-//            return;
-//        }
-//
-//        if (specialRtJumpType == 0) {
-//            return;
-//        }
-//
-//        if (specialRtJumpType == 1) {
-//            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
-//            intent.putExtra("good_id", hotRtGoodId);
-//            startActivity(intent);
-//        }
-//        if (specialRtJumpType == 2) {
-//            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-//            intent.putExtra("nid", StringUtils.isEmpty(hotRtGoodId) ? "" : hotRtGoodId);
-//            startActivity(intent);
-//        }
-//    }
-//
-//    @OnClick(R.id.iv_rec3)
-//    void hotRbGoodDetail() {
-//        if (StringUtils.isEmpty(hotRbGoodId)) {
-//            return;
-//        }
-//
-//        if (specialRbJumpType == 0) {
-//            return;
-//        }
-//
-//        if (specialRbJumpType == 1) {
-//            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
-//            intent.putExtra("good_id", hotRbGoodId);
-//            startActivity(intent);
-//        }
-//        if (specialRbJumpType == 2) {
-//            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-//            intent.putExtra("nid", StringUtils.isEmpty(hotRbGoodId) ? "" : hotRbGoodId);
-//            startActivity(intent);
-//        }
-//    }
+
+    void salePage() {
+        Intent intent = new Intent(getActivity(), GoodListActivity.class);
+        startActivity(intent);
+    }
+
+    void countryPage() {
+        Intent intent = new Intent(getActivity(), HotCountryActivity.class);
+        startActivity(intent);
+    }
+
+    void brandPage() {
+        Intent intent = new Intent(getActivity(), HotBrandActivity.class);
+        startActivity(intent);
+    }
+
+    void newsDetail() {
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        intent.putExtra("nid", StringUtils.isEmpty(newsId) ? "" : newsId);
+        startActivity(intent);
+    }
+
+
+    void toSearch() {
+        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        startActivity(intent);
+    }
+
+    void hotLfGoodDetail() {
+        if (StringUtils.isEmpty(hotLfGoodId)) {
+            return;
+        }
+
+        if (specialLfJumpType == 0) {
+            return;
+        }
+
+        if (specialLfJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotLfGoodId);
+            startActivity(intent);
+        }
+        if (specialLfJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotLfGoodId) ? "" : hotLfGoodId);
+            startActivity(intent);
+        }
+    }
+
+    void hotRtGoodDetail() {
+        if (StringUtils.isEmpty(hotRtGoodId)) {
+            return;
+        }
+
+        if (specialRtJumpType == 0) {
+            return;
+        }
+
+        if (specialRtJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotRtGoodId);
+            startActivity(intent);
+        }
+        if (specialRtJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotRtGoodId) ? "" : hotRtGoodId);
+            startActivity(intent);
+        }
+    }
+
+    void hotRbGoodDetail() {
+        if (StringUtils.isEmpty(hotRbGoodId)) {
+            return;
+        }
+
+        if (specialRbJumpType == 0) {
+            return;
+        }
+
+        if (specialRbJumpType == 1) {
+            Intent intent = new Intent(getActivity(), GoodDetailActivity.class);
+            intent.putExtra("good_id", hotRbGoodId);
+            startActivity(intent);
+        }
+        if (specialRbJumpType == 2) {
+            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+            intent.putExtra("nid", StringUtils.isEmpty(hotRbGoodId) ? "" : hotRbGoodId);
+            startActivity(intent);
+        }
+    }
 
     /**
      * @descriptoin 请求前加载progress
@@ -374,5 +406,40 @@ public class Home2Fragment extends BaseFragment implements HomeDataView, AppBarL
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         Logger.i("verticalOffset--->" + verticalOffset);
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.layout_sale:
+                salePage();
+                break;
+            case R.id.layout_country:
+                countryPage();
+                break;
+            case R.id.layout_brand:
+                brandPage();
+                break;
+            case R.id.tv_hot_news:
+                newsDetail();
+                break;
+            case R.id.search_wrapper:
+                toSearch();
+                break;
+            case R.id.iv_rec1:
+                hotLfGoodDetail();
+                break;
+            case R.id.iv_rec2:
+                hotRtGoodDetail();
+                break;
+            case R.id.iv_rec3:
+                hotRbGoodDetail();
+                break;
+        }
     }
 }

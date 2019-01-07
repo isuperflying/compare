@@ -15,11 +15,14 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.yc.compare.R;
 import com.yc.compare.bean.BannerInfo;
 import com.yc.compare.bean.CategoryInfo;
+import com.yc.compare.bean.HomeDataInfoRet;
 import com.yc.compare.bean.ResultInfo;
+import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.HomeDataPresenterImp;
 import com.yc.compare.ui.GoodDetailActivity;
 import com.yc.compare.ui.GoodListActivity;
@@ -293,34 +296,36 @@ public class Home1Fragment extends BaseFragment implements HomeDataView, AppBarL
      */
     @Override
     public void loadDataSuccess(ResultInfo tData) {
-//        if (tData != null && tData.getCode() == Constants.SUCCESS) {
-//            if (tData.getData() != null) {
-//                initBanner(tData.getData().getBanner());
-//                initFragments(tData.getData().getCategoryInfoList());
-//                if (tData.getData().getNews() != null && tData.getData().getNews().size() > 0) {
-//                    mNewsTextView.setText(tData.getData().getNews().get(0).getTitle());
-//                    newsId = tData.getData().getNews().get(0).getId();
-//                }
-//
-//                if (tData.getData().getSpecial() != null) {
-//                    if (tData.getData().getSpecial().size() >= 1) {
-//                        specialLfJumpType = tData.getData().getSpecial().get(0).getGoType();
-//                        hotLfGoodId = tData.getData().getSpecial().get(0).getObjectId();
-//                        Glide.with(this).load(tData.getData().getSpecial().get(0).getAdImage()).into(mRec1ImageView);
-//                    }
-//                    if (tData.getData().getSpecial().size() >= 2) {
-//                        specialRtJumpType = tData.getData().getSpecial().get(1).getGoType();
-//                        hotRtGoodId = tData.getData().getSpecial().get(1).getObjectId();
-//                        Glide.with(this).load(tData.getData().getSpecial().get(1).getAdImage()).into(mRec2ImageView);
-//                    }
-//                    if (tData.getData().getSpecial().size() >= 3) {
-//                        specialRbJumpType = tData.getData().getSpecial().get(2).getGoType();
-//                        hotRbGoodId = tData.getData().getSpecial().get(2).getObjectId();
-//                        Glide.with(this).load(tData.getData().getSpecial().get(2).getAdImage()).into(mRec3ImageView);
-//                    }
-//                }
-//            }
-//        }
+        if (tData != null && tData.getCode() == Constants.SUCCESS) {
+            if (tData instanceof HomeDataInfoRet) {
+                if (((HomeDataInfoRet) tData).getData() != null) {
+                    initBanner(((HomeDataInfoRet) tData).getData().getBanner());
+                    //initFragments(((HomeDataInfoRet) tData).getData().getCategoryInfoList());
+                    if (((HomeDataInfoRet) tData).getData().getNews() != null && ((HomeDataInfoRet) tData).getData().getNews().size() > 0) {
+                        mNewsTextView.setText(((HomeDataInfoRet) tData).getData().getNews().get(0).getTitle());
+                        newsId = ((HomeDataInfoRet) tData).getData().getNews().get(0).getId();
+                    }
+
+                    if (((HomeDataInfoRet) tData).getData().getSpecial() != null) {
+                        if (((HomeDataInfoRet) tData).getData().getSpecial().size() >= 1) {
+                            specialLfJumpType = ((HomeDataInfoRet) tData).getData().getSpecial().get(0).getGoType();
+                            hotLfGoodId = ((HomeDataInfoRet) tData).getData().getSpecial().get(0).getObjectId();
+                            Glide.with(this).load(((HomeDataInfoRet) tData).getData().getSpecial().get(0).getAdImage()).into(mRec1ImageView);
+                        }
+                        if (((HomeDataInfoRet) tData).getData().getSpecial().size() >= 2) {
+                            specialRtJumpType = ((HomeDataInfoRet) tData).getData().getSpecial().get(1).getGoType();
+                            hotRtGoodId = ((HomeDataInfoRet) tData).getData().getSpecial().get(1).getObjectId();
+                            Glide.with(this).load(((HomeDataInfoRet) tData).getData().getSpecial().get(1).getAdImage()).into(mRec2ImageView);
+                        }
+                        if (((HomeDataInfoRet) tData).getData().getSpecial().size() >= 3) {
+                            specialRbJumpType = ((HomeDataInfoRet) tData).getData().getSpecial().get(2).getGoType();
+                            hotRbGoodId = ((HomeDataInfoRet) tData).getData().getSpecial().get(2).getObjectId();
+                            Glide.with(this).load(((HomeDataInfoRet) tData).getData().getSpecial().get(2).getAdImage()).into(mRec3ImageView);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

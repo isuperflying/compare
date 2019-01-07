@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="484dp">
 
     <RelativeLayout
         android:id="@+id/top_content_layout"
@@ -13,8 +13,8 @@
         <com.youth.banner.Banner
             android:id="@+id/banner"
             app:delay_time="4000"
-            app:indicator_height="12dp"
-            app:indicator_width="12dp"
+            app:indicator_height="6dp"
+            app:indicator_width="6dp"
             android:layout_width="match_parent"
             android:layout_height="130dp" />
 
@@ -206,33 +206,33 @@
     </RelativeLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:id="@+id/search_layout"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="@drawable/input_bg"
-            android:gravity="left|center">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/search_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="36dp"-->
+            <!--android:background="@drawable/input_bg"-->
+            <!--android:gravity="left|center">-->
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="12dp"
-                android:src="@mipmap/search_icon" />
+            <!--<ImageView-->
+                <!--android:layout_width="15dp"-->
+                <!--android:layout_height="15dp"-->
+                <!--android:layout_marginLeft="12dp"-->
+                <!--android:src="@mipmap/search_icon" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:background="@null"
-                android:clickable="false"
-                android:focusable="false"
-                android:gravity="left|center"
-                android:hint="搜索内容"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:background="@null"-->
+                <!--android:clickable="false"-->
+                <!--android:focusable="false"-->
+                <!--android:gravity="left|center"-->
+                <!--android:hint="搜索内容"-->
+                <!--android:textSize="13sp" />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 </FrameLayout>

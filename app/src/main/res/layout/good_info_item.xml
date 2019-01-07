@@ -4,7 +4,7 @@
     android:layout_height="229dp"
     android:background="@drawable/good_item_bg"
     android:gravity="top|center"
-    android:layout_marginLeft="10dp"
+    android:layout_marginLeft="18dp"
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
